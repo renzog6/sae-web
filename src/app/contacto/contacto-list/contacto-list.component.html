@@ -1,0 +1,33 @@
+<div class="card-header">
+    <h3 class="card-title"></h3>
+</div>
+<!-- /.card-header -->
+<div class="card-body">
+
+    <table class="table table-striped table-bordered table-sm row-border hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+        <thead>
+            <tr>
+                <th rowspan="1" colspan="1">Empresa</th>
+                <th rowspan="1" colspan="1">Nombre</th>
+                <th rowspan="1" colspan="1">Tipo</th>
+                <th rowspan="1" colspan="1">Dato</th>
+                <th rowspan="1" colspan="1">Info</th>
+                <th rowspan="1" colspan="1">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let contacto of contactos">
+                <td>{{contacto.empresa}}</td>
+                <td>{{contacto.nombre}}</td>
+                <td>{{contacto.tipo}}</td>
+                <td>{{contacto.dato}}</td>
+                <td>{{contacto.info}}</td>
+                <td>
+                    <button (click)="contactoDetails(contacto.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+<!-- /.card-body -->

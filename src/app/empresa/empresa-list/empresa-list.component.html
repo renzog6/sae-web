@@ -1,0 +1,33 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2>Empresas</h2>
+    </div>
+    <div class="panel-body">
+        <table class="table table-sm table-striped table-dark">
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>Razon Social</th>
+                    <th>CUIT</th>
+                    <th>Contacto</th>
+                    <th>Info</th>
+                    <th>Rubro</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let e of empresas | async">
+                    <td>{{e.nombre}}</td>
+                    <td>{{e.razonSocial}}</td>
+                    <td>{{e.cuit}}</td>
+                    <td>
+                        <tr *ngFor="let c of e.contactoList">
+                            <td>{{c.nombre +" - "+c.tipo+" - "+c.dato}}</td>
+                        </tr>
+                    </td>
+                    <td> "X" </td>
+                    <td> "X" </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

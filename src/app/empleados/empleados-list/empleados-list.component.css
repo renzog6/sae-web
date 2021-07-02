@@ -1,0 +1,13 @@
+.container-botones {
+    padding: 10p;
+    border-bottom: 1px;
+    border-color: antiquewhite;
+}
+
+.container-botones>button {
+    margin: 10px;
+}
+
+.container-botones>ul>li {
+    margin: 10px;
+}
