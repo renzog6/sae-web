@@ -14,11 +14,11 @@ import { HomeComponent } from './home/home.component';
 import { ErrorComponent } from './home/error/error.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
 
-import { EmpresaComponent } from './component/empresa/empresa.component';
-import { EmpleadoComponent } from './component/empleado/empleado.component';
+import { EmpresaComponent } from './components/empresa/empresa.component';
+import { EmpleadoComponent } from './components/empleado/empleado.component';
 
-import { EmpresaModule } from './component/empresa/empresa.module';
-import { EmpleadoModule } from './component/empleado/empleado.module';
+import { EmpresaModule } from './components/empresa/empresa.module';
+import { EmpleadoModule } from './components/empleado/empleado.module';
 import { FooterComponent } from './home/footer/footer.component';
 
 @NgModule({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Empresa } from 'src/app/model/empresa';
-import { EmpresaService } from 'src/app/service/empresa.service';
+import { Empresa } from 'src/app/models/empresa.model';
+import { EmpresaService } from 'src/app/services/empresa.service';
 
 import { EmpresaListComponent } from '../empresa-list/empresa-list.component';
 

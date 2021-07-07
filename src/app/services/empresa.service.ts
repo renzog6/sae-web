@@ -2,7 +2,7 @@ import { Injectable,Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Empresa } from '../model/empresa';
+import { Empresa } from '../models/empresa.model';
 
 @Injectable({
   providedIn: 'root'

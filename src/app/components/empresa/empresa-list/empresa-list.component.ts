@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { Empresa } from 'src/app/model/empresa';
-import { EmpresaService } from 'src/app/service/empresa.service';
+import { Empresa } from 'src/app/models/empresa.model';
+import { EmpresaService } from 'src/app/services/empresa.service';
 import { EmpleadoDetailComponent } from '../../empleado/empleado-detail/empleado-detail.component';
 
 @Component({

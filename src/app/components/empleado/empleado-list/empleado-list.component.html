@@ -5,7 +5,11 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title"> Lista de Empleado</h4>
+                    <form>
+                        <div class="form-group form-inline">
+                            <input class="form-control ml-2" placeholder="Buscar..." type="text" [formControl]="filter" />
+                        </div>
+                    </form>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable,Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Empleado } from '../models/empleado.model';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpleadoService {
 
-  private baseUrl = 'http://localhost:8080/api/empleado/list';
+  private apiUrl = environment.baseUrl+'/api/empresa/list';
 
   constructor(private http: HttpClient) { }
 
