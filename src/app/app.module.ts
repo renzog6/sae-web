@@ -1,49 +1,43 @@
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule,  LOCALE_ID } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { registerLocaleData } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import localeEsAR from '@angular/common/locales/es-AR';
 registerLocaleData(localeEsAR, 'es-Ar');
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { DataTablesModule } from 'angular-datatables';
+import { AppRoutingModule } from './app-routing.module';
 
-import { ContactoListComponent } from './contacto/contacto-list/contacto-list.component';
-import { ContactoDetailsComponent } from './contacto/contacto-details/contacto-details.component';
-import { EmpresaListComponent } from './empresa/empresa-list/empresa-list.component';
-import { SidebarComponent } from './home/sidebar/sidebar.component';
+import { HomeComponent } from './home/home.component';
+import { ErrorComponent } from './home/error/error.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
 
-import { LoginComponent } from './home/login/login.component';
-import { HomeComponent } from './home/home.component';
-import { Page404Component } from './home/page404/page404.component';
+import { EmpresaComponent } from './component/empresa/empresa.component';
+import { EmpleadoComponent } from './component/empleado/empleado.component';
+
+import { EmpresaModule } from './component/empresa/empresa.module';
+import { EmpleadoModule } from './component/empleado/empleado.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ContactoListComponent,
-    ContactoDetailsComponent,
-    EmpresaListComponent,
-    SidebarComponent,
-    NavbarComponent,
-    LoginComponent,
     HomeComponent,
-    Page404Component
+    ErrorComponent,
+    NavbarComponent,
+    EmpresaComponent,
+    EmpleadoComponent
   ],
   imports: [
+    NgbModule,
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
     HttpClientModule,
-    NgbModule,
-    DataTablesModule
+    EmpresaModule,
+    EmpleadoModule
   ],
-  providers: [{provide: LOCALE_ID, useValue: 'es-Ar' }],
-  //providers: [],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

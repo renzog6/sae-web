@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +11,5 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  model: NgbDateStruct;
-
 
 }

@@ -1,0 +1,40 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Lista de Empresas </h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Empresa</th>
+                                    <th>Razon Social</th>
+                                    <th>CUIT</th>
+                                    <th>Info</th>
+                                    <th>Rubro</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let e of empresas | async; let i=index;" (click)="rowSelected(e);">
+                                    <td>{{i}}</td>
+                                    <td>{{e.nombre}}</td>
+                                    <td>{{e.razonSocial}}</td>
+                                    <td>{{e.cuit}}</td>
+                                    <td> "X" </td>
+                                    <td> "X" </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
