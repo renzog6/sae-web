@@ -1,25 +1,20 @@
 <!-- Site wrapper -->
 <div class="container-fluid">
 
-    <!-- Navbar -->
     <app-navbar></app-navbar>
-    <!-- /.navbar -->
-
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Main content -->
-        <section class="content">
-            <router-outlet></router-outlet>
-        </section>
-        <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            Desarollado por renzog6
-        </div>
-    </footer>
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
 
 </div>
 <!-- ./wrapper -->
+
+<!-- <div class="wrapper">
+  <div class="sidebar" data-color="red">
+      <app-sidebar></app-sidebar>
+  </div>
+  <div class="main-panel">
+      <app-navbar></app-navbar>
+      <router-outlet></router-outlet>
+      <app-footer></app-footer>
+  </div>
+</div> -->

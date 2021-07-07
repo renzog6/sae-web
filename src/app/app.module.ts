@@ -19,6 +19,7 @@ import { EmpleadoComponent } from './component/empleado/empleado.component';
 
 import { EmpresaModule } from './component/empresa/empresa.module';
 import { EmpleadoModule } from './component/empleado/empleado.module';
+import { FooterComponent } from './home/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { EmpleadoModule } from './component/empleado/empleado.module';
     ErrorComponent,
     NavbarComponent,
     EmpresaComponent,
-    EmpleadoComponent
+    EmpleadoComponent,
+    FooterComponent
   ],
   imports: [
     NgbModule,

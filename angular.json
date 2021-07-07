@@ -30,6 +30,8 @@
                             "src/assets"
                         ],
                         "styles": [
+                            "node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
+                            "src/assets/scss/now-ui-dashboard.scss",
                             "src/styles.css"
                         ],
                         "scripts": [
