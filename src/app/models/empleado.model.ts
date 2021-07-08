@@ -1,20 +1,19 @@
 import { Observable } from 'rxjs';
-import { Contacto } from '../../contacto/contacto';
 import { EmpleadoCategoria } from './empleado-categoria.model';
 import { EmpleadoPuesto } from './empleado-puesto.model';
 
 export class Empleado {
 
-  id: number;
-  nombre: string;
-  apellido: string;
-  nacimiento: Date;
-  dni: string;
-  cuil: string;
-  domicilio: string;
-  contacto: string;
-  categoria: string;
-  puesto: EmpleadoPuesto;
+  id?: number;
+  nombre: string | undefined;
+  apellido: string | undefined;
+  nacimiento!: Date;
+  dni: string | undefined;
+  cuil: string | undefined;
+  domicilio: string | undefined;
+  contacto: string | undefined;
+  categoria: string | undefined;
+  puesto: EmpleadoPuesto | undefined;
   genero: any;
   estado: any;
   estadoCivil: any;
@@ -22,7 +21,7 @@ export class Empleado {
   fechaAlta: any;
   fechaBaja: any;
 
-  constructor(json?: any) {
+/*   constructor(json?: any) {
     this.id = json.idPersona;
     this.nombre = json.nombre;
     this.apellido = json.apellido;
@@ -30,7 +29,10 @@ export class Empleado {
     this.dni = json.dni;
     this.cuil = json.cuil;
     this.puesto = json.puesto;
-  }
+    this.domicilio = "";
+    this.contacto ="";
+    this.categoria="";
+  } */
 
   getFullName(): string {
     return this.apellido + ' ' + this.nombre;

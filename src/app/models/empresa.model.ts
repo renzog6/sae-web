@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Contacto } from './contacto';
+import { Contacto } from './contacto.model';
 
 export class Empresa {
   id: number | undefined;

@@ -14,12 +14,12 @@ import { EmpleadoDetailComponent } from '../../empleado/empleado-detail/empleado
 })
 export class EmpresaListComponent implements OnInit {
 
+  empresas: Observable<Empresa[]> | undefined;
     selectEmpresa: Empresa = new Empresa;
-    empresas: Observable<Empresa[]> | undefined;
+    currentIndex?: Number;
 
     constructor(
-      private empresaService: EmpresaService) {
-    }
+      private empresaService: EmpresaService) {}
 
     ngOnInit(): void {
       this.reloadData();
@@ -29,10 +29,11 @@ export class EmpresaListComponent implements OnInit {
       this.empresas = this.empresaService.getList();
     }
 
-    rowSelected(e:Empresa):void{
+    rowSelected(e:Empresa, index:Number):void{
       this.selectEmpresa = e;
       this.empresaService.setEmpresa(this.selectEmpresa);
       console.log(this.selectEmpresa.nombre);
+      this.currentIndex = index;
       /* this.empresaDetail.setDatos(this.selectEmpresa); */
     }
 

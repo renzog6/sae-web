@@ -21,7 +21,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let e of empresas | async; let i=index;" (click)="rowSelected(e);">
+                                <tr *ngFor="let e of empresas | async; let i=index;" (click)="rowSelected(e,i);" [class.active]="i == currentIndex">
                                     <td>{{i}}</td>
                                     <td>{{e.nombre}}</td>
                                     <td>{{e.razonSocial}}</td>

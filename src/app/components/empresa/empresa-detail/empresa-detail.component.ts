@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Empresa } from 'src/app/models/empresa.model';
 import { EmpresaService } from 'src/app/services/empresa.service';
 
-import { EmpresaListComponent } from '../empresa-list/empresa-list.component';
-
 @Component({
   selector: 'app-empresa-detail',
   templateUrl: './empresa-detail.component.html',
@@ -25,8 +23,6 @@ export class EmpresaDetailComponent implements OnInit {
     );
   }
 
-  setDatos(e: Empresa):void{
-    this.empresa = e;
-  }
+
 
 }

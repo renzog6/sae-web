@@ -13,10 +13,6 @@ export class EmpresaService {
   @Output()
   empresaEmitter = new EventEmitter<Empresa>();
 
-  private apiUrl = environment.baseUrl+'/api/empresa/list';
-
-  constructor(private http: HttpClient) { }
-
   setEmpresa(nuevaEmpresa:Empresa):void{
     this.empresa = nuevaEmpresa;
     this.cambiarEmpresa();
@@ -24,6 +20,14 @@ export class EmpresaService {
 
   cambiarEmpresa():void{
     this.empresaEmitter.emit(this.empresa);
+  }
+
+  private apiUrl = environment.baseUrl+'/api/empresa/list';
+
+  constructor(private http: HttpClient) { }
+
+  getAll(): Observable<Empresa[]> {
+    return this.http.get<Empresa[]>(this.apiUrl);
   }
 
   getList(): Observable<any> {
