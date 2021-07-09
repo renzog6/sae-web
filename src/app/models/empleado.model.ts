@@ -1,10 +1,7 @@
-import { Observable } from 'rxjs';
-import { EmpleadoCategoria } from './empleado-categoria.model';
-import { EmpleadoPuesto } from './empleado-puesto.model';
+import { EmpleadoPuesto } from "./empleado-puesto.model";
 
 export class Empleado {
-
-  id?: number;
+  id: number;
   nombre: string = "";
   apellido: string  = "";
   nacimiento!: Date;
@@ -21,32 +18,11 @@ export class Empleado {
   fechaAlta: any;
   fechaBaja: any;
 
-  constructor(){}
-/*   constructor(json?: any) {
-    this.id = json.idPersona;
-    this.nombre = json.nombre;
-    this.apellido = json.apellido;
-    this.nacimiento = new Date(json.nacimiento);
-    this.dni = json.dni;
-    this.cuil = json.cuil;
-    this.puesto = json.puesto;
-    this.domicilio = "";
-    this.contacto ="";
-    this.categoria="";
-  } */
-
-  getFullName(): string {
-    return this.apellido + ' ' + this.nombre;
+   constructor(id: number){
+    this.id = id;
   }
 
- getEdad(): number{
-    const hoy = new Date();
-    let edad = hoy.getFullYear() - this.nacimiento.getFullYear();
-    const m = hoy.getMonth() - this.nacimiento.getMonth();
-
-    if (m < 0 || (m === 0 && hoy.getDate() < this.nacimiento.getDate())) {
-      edad--;
-    }
-    return edad;
+  getName(): string {
+    return "`${this.nombre} ${this.info}`";
   }
 }

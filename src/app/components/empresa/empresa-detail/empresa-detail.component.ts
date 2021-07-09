@@ -9,7 +9,7 @@ import { EmpresaService } from 'src/app/services/empresa.service';
 })
 export class EmpresaDetailComponent implements OnInit {
 
-  empresa: Empresa = new Empresa;
+  empresa: Empresa = new Empresa();
 
   constructor(
     private empresaService: EmpresaService) {

@@ -7,7 +7,7 @@
         </div>
         <div class="card-body">
             <form>
-                <div class="row">
+                <div class="row" *ngIf="empleado">
                     <div class="col-md-4">
                         <div class="card-user">
                             <div class="image">
@@ -20,7 +20,7 @@
                                         <h5 class="title">{{empleado.apellido}} {{empleado.nombre}}</h5>
                                     </a>
                                     <p class="description">
-                                        <strong>Edad:</strong>{{empleado.getEdad()}}
+                                        <strong>Edad:</strong>
                                     </p>
                                 </div>
                             </div>

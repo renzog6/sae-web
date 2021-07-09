@@ -15,8 +15,8 @@ import { EmpleadoDetailComponent } from '../../empleado/empleado-detail/empleado
 export class EmpresaListComponent implements OnInit {
 
   empresas: Observable<Empresa[]> | undefined;
-    selectEmpresa: Empresa = new Empresa;
-    currentIndex?: Number;
+    selectEmpresa: Empresa = new Empresa();
+    currentIndex?: number;
 
     constructor(
       private empresaService: EmpresaService) {}
@@ -29,7 +29,7 @@ export class EmpresaListComponent implements OnInit {
       this.empresas = this.empresaService.getList();
     }
 
-    rowSelected(e:Empresa, index:Number):void{
+    rowSelected(e:Empresa, index:number):void{
       this.selectEmpresa = e;
       this.empresaService.setEmpresa(this.selectEmpresa);
       console.log(this.selectEmpresa.nombre);

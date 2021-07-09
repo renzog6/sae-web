@@ -10,7 +10,7 @@ import { Empleado } from '../models/empleado.model';
 })
 export class EmpleadoService {
 
-  empleado: Empleado = new Empleado();
+  empleado: Empleado = new Empleado(0);
   @Output()
   emitter = new EventEmitter<Empleado>();
 
