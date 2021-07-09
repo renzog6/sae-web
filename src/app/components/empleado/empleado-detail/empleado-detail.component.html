@@ -3,7 +3,7 @@
 <div class="main-content">
     <div class="card">
         <div class="card-header">
-            <h5 class="title">Edit Profile</h5>
+            <h5 class="title">Detalle</h5>
         </div>
         <div class="card-body">
             <form>
@@ -20,7 +20,7 @@
                                         <h5 class="title">{{empleado.apellido}} {{empleado.nombre}}</h5>
                                     </a>
                                     <p class="description">
-                                        michael24
+                                        <strong>Edad:</strong>{{edad}}
                                     </p>
                                 </div>
                             </div>
@@ -86,8 +86,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Address</label>
-                                    <input type="text" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
+                                    <label>Domicilio</label>
+                                    <input type="text" class="form-control" placeholder="En la casa" id="domicilio" name="domicilio" [(ngModel)]="empleado.domicilio">
                                 </div>
                             </div>
                         </div>

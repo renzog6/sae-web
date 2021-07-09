@@ -5,8 +5,8 @@ import { EmpleadoPuesto } from './empleado-puesto.model';
 export class Empleado {
 
   id?: number;
-  nombre: string | undefined;
-  apellido: string | undefined;
+  nombre: string = "";
+  apellido: string  = "";
   nacimiento!: Date;
   dni: string | undefined;
   cuil: string | undefined;
@@ -21,6 +21,7 @@ export class Empleado {
   fechaAlta: any;
   fechaBaja: any;
 
+  constructor(){}
 /*   constructor(json?: any) {
     this.id = json.idPersona;
     this.nombre = json.nombre;
@@ -38,7 +39,7 @@ export class Empleado {
     return this.apellido + ' ' + this.nombre;
   }
 
-  getEdad(): number{
+ getEdad(): number{
     const hoy = new Date();
     let edad = hoy.getFullYear() - this.nacimiento.getFullYear();
     const m = hoy.getMonth() - this.nacimiento.getMonth();
