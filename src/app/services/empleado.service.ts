@@ -1,6 +1,7 @@
 import { Injectable,Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { retry, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Empleado } from '../models/empleado.model';
 
@@ -10,7 +11,7 @@ import { Empleado } from '../models/empleado.model';
 })
 export class EmpleadoService {
 
-  empleado: Empleado = new Empleado(0);
+  empleado: Empleado = new Empleado();
   @Output()
   emitter = new EventEmitter<Empleado>();
 
@@ -28,7 +29,12 @@ export class EmpleadoService {
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>(this.apiUrl);
+   // return this.http.get<Empleado[]>(this.apiUrl);
+    return this.http.get<Empleado[]>(this.apiUrl).pipe(
+      retry(1),
+      catchError(this.handleError)
+
+    );
   }
   getList(): Observable<any> {
     return this.http.get(`${this.apiUrl}`);
@@ -36,5 +42,19 @@ export class EmpleadoService {
 
   getItem(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  handleError(error:any) {
+
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    window.alert(errorMessage);
+    return throwError(errorMessage);
   }
 }

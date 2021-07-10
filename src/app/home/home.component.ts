@@ -8,7 +8,7 @@ import { Empleado } from '../models/empleado.model';
 })
 export class HomeComponent implements OnInit {
 
-  empleado: Empleado = new Empleado(0);
+  empleado: Empleado = new Empleado();
 
   constructor() { }
 

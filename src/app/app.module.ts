@@ -15,7 +15,7 @@ import { ErrorComponent } from './home/error/error.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
 
 import { EmpresaComponent } from './components/empresa/empresa.component';
-import { EmpleadoComponent } from './components/empleado/empleado.component';
+
 
 import { EmpresaModule } from './components/empresa/empresa.module';
 import { EmpleadoModule } from './components/empleado/empleado.module';
@@ -28,7 +28,6 @@ import { FooterComponent } from './home/footer/footer.component';
     ErrorComponent,
     NavbarComponent,
     EmpresaComponent,
-    EmpleadoComponent,
     FooterComponent
   ],
   imports: [

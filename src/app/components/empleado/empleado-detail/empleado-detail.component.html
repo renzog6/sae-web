@@ -20,7 +20,7 @@
                                         <h5 class="title">{{empleado.apellido}} {{empleado.nombre}}</h5>
                                     </a>
                                     <p class="description">
-                                        <strong>Edad:</strong>
+                                        <strong>Edad:</strong>{{empleado.getEdad()}}
                                     </p>
                                 </div>
                             </div>
@@ -64,6 +64,7 @@
                                 <div class="form-group">
                                     <label>Nacimineto</label>
                                     <input type="text" class="form-control" placeholder="Ej:01/02/1980" id="nacimento" name="nacimineto" [(ngModel)]="empleado.nacimiento" required>
+
                                 </div>
                             </div>
 
@@ -92,13 +93,24 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-6 pr-1">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="text" class="form-control" placeholder="City" value="Mike">
+
+                                    <form class="form-inline">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+                                                <div class="input-group-append form-control">
+                                                    <button class="btn btn-outline-secondary btn-sm calendar" (click)="d.toggle()" type="button"></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
                                 </div>
                             </div>
-                            <div class="col-md-4 px-1">
+                            <div class="col-md-6 px-1">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <input type="text" class="form-control" placeholder="Country" value="Andrew">

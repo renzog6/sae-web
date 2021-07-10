@@ -12,7 +12,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 export class EmpleadoListComponent implements OnInit {
 
   empleados: Empleado[] = [];
-  current: Empleado = new Empleado(0);
+  current: Empleado = new Empleado();
   currentIndex = -1;
   title = '';
 
@@ -40,7 +40,7 @@ export class EmpleadoListComponent implements OnInit {
 
   refreshList(): void {
     this.retrieve();
-    this.current = new Empleado(0);
+    this.current = new Empleado();
     this.currentIndex = -1;
   }
 

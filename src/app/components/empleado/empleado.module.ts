@@ -3,12 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { EmpleadoRoutingModule } from './empleado-routing.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { EmpleadoComponent } from './empleado.component';
 import { EmpleadoListComponent } from './empleado-list/empleado-list.component';
 import { EmpleadoDetailComponent } from './empleado-detail/empleado-detail.component';
 
 
+
 @NgModule({
   declarations: [
+    EmpleadoComponent,
     EmpleadoListComponent,
     EmpleadoDetailComponent
   ],
@@ -16,7 +21,8 @@ import { EmpleadoDetailComponent } from './empleado-detail/empleado-detail.compo
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    EmpleadoRoutingModule
+    EmpleadoRoutingModule,
+    NgbModule
   ],
   exports:[
     EmpleadoListComponent,
