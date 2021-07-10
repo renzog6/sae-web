@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
+import { registerLocaleData } from '@angular/common';
+import localeEsAR from '@angular/common/locales/es-AR';
+registerLocaleData(localeEsAR, 'es-AR');
+
 import { EmpleadoRoutingModule } from './empleado-routing.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -27,6 +31,7 @@ import { EmpleadoDetailComponent } from './empleado-detail/empleado-detail.compo
   exports:[
     EmpleadoListComponent,
     EmpleadoDetailComponent
-  ]
+  ],
+  providers: [{provide: localeEsAR, useValue: 'es-AR'}],
 })
 export class EmpleadoModule { }
