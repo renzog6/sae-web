@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { registerLocaleData } from '@angular/common';
 import localeEsAR from '@angular/common/locales/es-AR';
-registerLocaleData(localeEsAR, 'es-Ar');
+registerLocaleData(localeEsAR, 'es-AR');
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -38,7 +38,7 @@ import { FooterComponent } from './home/footer/footer.component';
     EmpresaModule,
     EmpleadoModule
   ],
-  providers: [],
+  providers: [{provide: localeEsAR, useValue: 'es-AR-Ar'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
