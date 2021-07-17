@@ -1,5 +1,6 @@
+"use strict";
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateStruct, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
 
 import { Empleado } from 'src/app/models/empleado.model';
@@ -14,7 +15,9 @@ export class EmpleadoDetailComponent implements OnInit {
 
   empleado: Empleado = new Empleado();
   edad: Number=0;
-  model: NgbDateStruct = { year: 1789, month: 7, day: 14 }
+  date = new Date();
+  model: string | undefined; //NgbDateStruct = { day: this.date.getUTCDate(), month: this.date.getUTCMonth() + 1, year: this.date.getUTCFullYear()};
+  //{ year: 1789, month: 7, day: 14 }
 
   dto={
     idPersona:3,
@@ -24,14 +27,17 @@ export class EmpleadoDetailComponent implements OnInit {
 
   constructor(
     private service:EmpleadoService,
+    private ngbCalendar: NgbCalendar,
+    private dateAdapter: NgbDateAdapter<string>
     ) {}
 
   ngOnInit(): void {
-    this.empleado.setDatos(this.dto);
+    //this.empleado.setDatos(this.dto);
 
     this.service.emitter.subscribe(
       data=>{
         this.empleado.setDatos(data);
+        //this.empleado=data;
         console.log(this.empleado)
       }
     )

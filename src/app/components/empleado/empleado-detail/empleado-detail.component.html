@@ -76,7 +76,7 @@
 
                             <div class="col-md-6 col-lg-3 pr-1">
                                 <div class="form-group">
-                                    <label>Estado Civil</label>
+                                    <label>Genero</label>
                                     <input type="text" class="form-control" placeholder="Quien Sabe" id="genero" name="genero" [(ngModel)]="empleado.genero" required>
                                 </div>
                             </div>
@@ -105,10 +105,8 @@
                                     <form class="form-inline">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
-                                                <div class="input-group-append form-control">
-                                                    <button class="btn btn-outline-secondary btn-sm calendar" (click)="d.toggle()" type="button"></button>
-                                                </div>
+                                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()">
+
                                             </div>
                                         </div>
                                     </form>

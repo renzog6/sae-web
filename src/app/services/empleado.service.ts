@@ -33,7 +33,6 @@ export class EmpleadoService {
     return this.http.get<Empleado[]>(this.apiUrl).pipe(
       retry(1),
       catchError(this.handleError)
-
     );
   }
   getList(): Observable<any> {

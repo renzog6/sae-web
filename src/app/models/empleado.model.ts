@@ -1,7 +1,9 @@
 import { EmpleadoPuesto } from "./empleado-puesto.model";
+import { estadoCivil } from "./estado-civil.enum";
+import { genero } from "./genero.enum";
 
 export class Empleado {
-  id: number = 0;
+  idPersona: number = 0;
   nombre: string = "";
   apellido: string = "";
   nacimiento!: Date;// = new Date();
@@ -11,24 +13,26 @@ export class Empleado {
   contacto: string | undefined;
   categoria: string | undefined;
   puesto: EmpleadoPuesto | undefined;
-  genero: any;
+  genero!: genero;
   estado: any;
-  estadoCivil: any;
+  estadoCivil!: estadoCivil;
   info: any;
   fechaAlta!: Date;
-  fechaBaja: any;
+  fechaBaja!: Date;
 
   constructor() {}
 
   setDatos(dto: any): void {
     try {
-      this.id = dto.idPersona;
+      this.idPersona = dto.idPersona;
       this.nombre = dto.nombre;
       this.apellido = dto.apellido;
       this.dni = dto.dni;
       console.log("F. Antes: " + dto.naciento);
       this.nacimiento = new Date(dto.nacimiento);
       console.log("F. Despues: " + dto.naciento);
+      this.genero = dto.genero;
+      this.estadoCivil = dto.estadoCivil;
       this.fechaAlta = new Date(dto.fechaAlta);
       this.fechaBaja = new Date(dto.fechaBaja);
 
