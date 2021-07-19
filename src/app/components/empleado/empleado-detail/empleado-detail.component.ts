@@ -1,10 +1,11 @@
 "use strict";
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbDate, NgbDateStruct, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
-import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
+import { Component, OnInit } from '@angular/core';
+import { NgbCalendar, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+
 
 import { Empleado } from 'src/app/models/empleado.model';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+
 
 @Component({
   selector: 'app-empleado-detail',
@@ -15,20 +16,11 @@ export class EmpleadoDetailComponent implements OnInit {
 
   empleado: Empleado = new Empleado();
   edad: Number=0;
-  date = new Date();
-  model: string | undefined; //NgbDateStruct = { day: this.date.getUTCDate(), month: this.date.getUTCMonth() + 1, year: this.date.getUTCFullYear()};
-  //{ year: 1789, month: 7, day: 14 }
-
-  dto={
-    idPersona:3,
-    nombre:"Lalo",
-    apellido:"Lamda"
-  }
+  dateNa!: NgbDateStruct;
+  dateAlta!: NgbDateStruct;
 
   constructor(
-    private service:EmpleadoService,
-    private ngbCalendar: NgbCalendar,
-    private dateAdapter: NgbDateAdapter<string>
+    private service:EmpleadoService
     ) {}
 
   ngOnInit(): void {
@@ -38,14 +30,14 @@ export class EmpleadoDetailComponent implements OnInit {
       data=>{
         this.empleado.setDatos(data);
         //this.empleado=data;
-        console.log(this.empleado)
+        this.dateNa = { day: this.empleado.nacimiento.getUTCDate(), month: this.empleado.nacimiento.getUTCMonth() + 1, year: this.empleado.nacimiento.getUTCFullYear()};
+        this.dateAlta = { day: this.empleado.fechaAlta.getUTCDate(), month: this.empleado.fechaAlta.getUTCMonth() + 1, year: this.empleado.fechaAlta.getUTCFullYear()};
+        console.log(data)
       }
     )
 
   }
 
 }
-function NgbdDatepicker(NgbdDatepicker: any) {
-  throw new Error('Function not implemented.');
-}
+
 

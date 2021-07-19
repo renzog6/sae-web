@@ -28,9 +28,9 @@ export class Empleado {
       this.nombre = dto.nombre;
       this.apellido = dto.apellido;
       this.dni = dto.dni;
-      console.log("F. Antes: " + dto.naciento);
+      this.cuil = dto.cuil;
       this.nacimiento = new Date(dto.nacimiento);
-      console.log("F. Despues: " + dto.naciento);
+      this.domicilio = dto.domicilio;
       this.genero = dto.genero;
       this.estadoCivil = dto.estadoCivil;
       this.fechaAlta = new Date(dto.fechaAlta);

@@ -1,5 +1,5 @@
-import {Component, Injectable} from '@angular/core';
-import {NgbCalendar, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { Injectable} from '@angular/core';
+import { NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * This Service handles how the date is represented in scripts i.e. ngModel.
