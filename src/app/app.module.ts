@@ -1,8 +1,9 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
-import { NgbDateAdapter, NgbDateParserFormatter, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbDateParserFormatter, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
+import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from "@angular/common";
 import localeEsAR from "@angular/common/locales/es-AR";
 registerLocaleData(localeEsAR, "es-AR");
@@ -14,13 +15,12 @@ import { HomeComponent } from "./home/home.component";
 import { ErrorComponent } from "./home/error/error.component";
 import { NavbarComponent } from "./home/navbar/navbar.component";
 
-import { EmpresaComponent } from "./components/empresa/empresa.component";
-
 import { EmpresaModule } from "./components/empresa/empresa.module";
 import { EmpleadoModule } from "./components/empleado/empleado.module";
 import { FooterComponent } from "./home/footer/footer.component";
 
-import { CustomAdapter, CustomDateParserFormatter } from "./services/date-formatter.service"
+import { CustomDateParserFormatter } from "./services/date-formatter.service";
+
 
 
 @NgModule({
@@ -29,9 +29,7 @@ import { CustomAdapter, CustomDateParserFormatter } from "./services/date-format
     HomeComponent,
     ErrorComponent,
     NavbarComponent,
-    EmpresaComponent,
-    FooterComponent,
-
+    FooterComponent
   ],
   imports: [
     NgbModule,
@@ -42,7 +40,7 @@ import { CustomAdapter, CustomDateParserFormatter } from "./services/date-format
     EmpleadoModule,
   ],
   providers: [
-    { provide: localeEsAR, useValue: "es-AR-Ar" },
+    { provide: LOCALE_ID, useValue: "es-AR" },
   // {provide: NgbDateAdapter, useClass: CustomAdapter},
    {provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter}
   ],

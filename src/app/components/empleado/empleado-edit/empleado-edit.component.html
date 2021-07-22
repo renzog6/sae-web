@@ -4,14 +4,10 @@
     <div class="card">
         <div class="card-header">
             <h5 class="title">Detalle</h5>
-            <p>
-                <ngb-alert #selfClosingAlert *ngIf="message" type="danger" (closed)="message = ''">{{ message }}
-                </ngb-alert>
-            </p>
         </div>
         <div class="card-body">
             <form>
-                <div class="row" *ngIf="empleado.nombre">
+                <div class="row">
                     <div class="col-md-4">
                         <div class="card-user">
                             <div class="image">
@@ -21,29 +17,21 @@
                                 <div class="author">
                                     <a href="#">
                                         <img class="avatar border-gray" src="../assets/img/mike.jpg" alt="...">
-                                        <h5 class="title">{{empleado.apellido}} {{empleado.nombre}}</h5>
+                                        <h5 class="title">Subir Imagen</h5>
                                     </a>
-                                    <p class="description">
-                                        <li>
-                                            <strong>Edad:</strong>{{empleado.getEdad()}} años.
-                                        </li>
-                                        <li>
-                                            <strong>Antiguedad:</strong>{{empleado.getAntiguedad()}} años.
-                                        </li>
-                                    </p>
                                 </div>
                             </div>
                             <hr>
                             <div class="button-container">
                                 <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-                  <i class="fab fa-facebook-f"></i>
-                </button>
+                                          <i class="fab fa-facebook-f"></i>
+                                        </button>
                                 <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-                  <i class="fab fa-twitter"></i>
-                </button>
+                                          <i class="fab fa-twitter"></i>
+                                        </button>
                                 <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-                  <i class="fab fa-google-plus-g"></i>
-                </button>
+                                          <i class="fab fa-google-plus-g"></i>
+                                        </button>
                             </div>
                         </div>
                     </div>
@@ -72,7 +60,7 @@
                             <div class="col-md-6 col-lg-3 px-1">
                                 <div class="form-group">
                                     <label>Nacimineto</label>
-                                    <input class="form-control" placeholder="dd/mm/aaaa" id="nacimento" name="nacimineto" [(ngModel)]="dateNacimiento" ngbDatepicker #dNa="ngbDatepicker" (click)="dNa.toggle()">
+                                    <input class="form-control" placeholder="dd/mm/aaaa" id="nacimento" name="nacimineto" [(ngModel)]="dateNa" ngbDatepicker #dNa="ngbDatepicker" (click)="dNa.toggle()">
                                 </div>
                             </div>
 
@@ -80,21 +68,16 @@
                             <div class="col-md-6 col-lg-3 pr-1">
                                 <div class="form-group">
                                     <label>Genero</label>
-                                    <!-- <input type="text" class="form-control" placeholder="Quien Sabe" id="genero" name="genero" [(ngModel)]="empleado.genero" required> -->
-                                    <select class="form-control" name="genero" [(ngModel)]="empleado.genero">
+                                    <select class="form-control" name="genero">
                                       <option [ngValue]="null" disabled>Selecionar</option>
-                                      <option *ngFor="let g of generos" [ngValue]="g" (click)="onGeneroChanged(g)">{{g}}</option>
+                                      <option *ngFor="let g of generos" [ngValue]="empleado.genero" (click)="onGeneroChanged(g)">{{g}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3 px-1">
                                 <div class="form-group">
                                     <label>Estado Civil</label>
-                                    <!-- <input type="text" class="form-control" placeholder="Soltero" id="estadoCivil" name="estadoCivil" [(ngModel)]="empleado.estadoCivil" required> -->
-                                    <select class="form-control" name="estadoCivil" [(ngModel)]="empleado.estadoCivil">
-                                      <option [ngValue]="null" disabled>Selecionar</option>
-                                      <option *ngFor="let e of estadoCivils" [ngValue]="e" >{{e}}</option>
-                                    </select>
+                                    <input type="text" class="form-control" placeholder="Soltero" id="estadoCivil" name="estadoCivil" [(ngModel)]="empleado.estadoCivil" required>
                                 </div>
                             </div>
 
@@ -116,7 +99,7 @@
                                     <form class="form-inline">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="dateNacimiento" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()">
+                                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="dateNa" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()">
                                             </div>
                                         </div>
                                     </form>
@@ -133,7 +116,7 @@
                         </div>
                         <div class="row">
                             <hr>
-                            <h4>Datos Laborales</h4>
+                            <h3>Datos Laborales</h3>
                             <div class="col-md-12">
 
                                 <div class="col-md-6 col-lg-3 px-1">
@@ -150,20 +133,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <hr>
-                            <div class="col-md-6 pr-1">
-                                <button class="badge badge-danger mr-2" (click)="delete()">
-                  Delete
-                </button>
-                            </div>
-                            <div class="col-md-6 px-1">
-                                <button type="submit" class="badge badge-success mb-2" (click)="update()">
-                  Update
-                </button>
-                            </div>
-                        </div>
-                        <p>{{ message }}</p>
                     </div>
                 </div>
             </form>

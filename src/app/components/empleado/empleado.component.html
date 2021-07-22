@@ -1,14 +1,19 @@
 <div class="container-fluid">
-    <!--     <div class="row">
+
+    <div class="row">
         <nav class="navbar navbar-light bg-light">
             <div class="container-fluid">
                 <h5 class="card-title">Empleados</h5>
-                <button class="btn btn-sm btn-outline-secondary" type="button">Nuevo</button>
-                <button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>
+                <a [routerLink]="'list'" routerLinkActive="active">Todos</a>
+                <button class="btn btn-sm btn-outline-secondary" type="button" [routerLink]="'add'" routerLinkActive="active">Nuevo</button>
             </div>
         </nav>
 
-    </div> -->
+    </div>
+    <div class="row">
+        <router-outlet></router-outlet>
+    </div>
+    <!-- 
     <div class="row">
         <div class="col-xs-3 col-md-5">
             <app-empleado-list></app-empleado-list>
@@ -16,5 +21,5 @@
         <div class="col-xs-4 col-md-7">
             <app-empleado-detail></app-empleado-detail>
         </div>
-    </div>
+    </div> -->
 </div>

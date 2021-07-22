@@ -1,10 +1,10 @@
-export enum estadoCivil{
+export enum EstadoCivil{
 
-  Soltero = "SOLTERO",
-  Casado = "CASADO",
-  Divorciado = "DIVORCIADO",
-  Viudo = "VIUDO",
-  Concubinato = "CONCUBINATO",
-  Otro = "OTRO"
+  SOLTERO = "Soltero",
+  CASADO = "Casado",
+  DIVORCIADO = "Divorciado",
+  VIUDO = "Viudo",
+  CONCUBINATO = "Concubinato",
+  OTRO = "Otro"
 
 }

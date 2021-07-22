@@ -18,16 +18,20 @@
                         <table class="table table-striped table-hover mb-0">
                             <thead class=" text-primary">
                                 <th>#</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th class="text-right">DNI</th>
+                                <th>DNI</th>
+                                <th>Antiguedad</th>
+                                <th>Puesto</th>
+                                <th>Categoria</th>
+                                <th>Accion</th>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let empleado of empleados; let i = index" (click)="setActive(empleado,i);" [class.table-active]="i == currentIndex">
-                                    <td>{{i}}</td>
-                                    <td>{{empleado.nombre}}</td>
-                                    <td>{{empleado.apellido}}</td>
+                                    <td>{{empleado.apellido}} {{empleado.nombre}}</td>
                                     <td>{{empleado.dni}}</td>
+                                    <td>{{empleado.getAntiguedad()}}</td>
+                                    <td>{{empleado.puesto.nombre}}</td>
+                                    <td>{{empleado.categoria.nombre}}</td>
+                                    <td> <a routerLink="{{empleado.idPersona}}">Edit</a></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -3,40 +3,28 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Empleado } from '../models/empleado.model';
+import { EmpleadoPuesto } from '../models/empleado-puesto.model';
+
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class EmpleadoService {
+export class EmpleadoPuestoService {
 
-  empleado: Empleado = new Empleado();
-  @Output()
-  emitter = new EventEmitter<Empleado>();
-
-  setActive(current:Empleado):void{
-    this.empleado = current;
-    this.cambiar();
-  }
-
-  cambiar():void{
-    this.emitter.emit(this.empleado);
-  }
-
-  private apiUrl = environment.baseUrl+'/api/empleado';
+  private apiUrl = environment.baseUrl+'/api/empleado-puesto';
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>(this.apiUrl+'/list').pipe(
+  getAll(): Observable<EmpleadoPuesto[]> {
+    return this.http.get<EmpleadoPuesto[]>(this.apiUrl+'/list').pipe(
       retry(1),
       catchError(this.handleError)
     );
   }
 
-  get(id: any): Observable<Empleado> {
-    return this.http.get<Empleado>(`${this.apiUrl}/${id}`);
+  get(id: any): Observable<EmpleadoPuesto> {
+    return this.http.get<EmpleadoPuesto>(`${this.apiUrl}/${id}`);
   }
 
   create(data: any): Observable<any> {

@@ -1,6 +1,7 @@
+import { EmpleadoCategoria } from "./empleado-categoria.model";
 import { EmpleadoPuesto } from "./empleado-puesto.model";
-import { estadoCivil } from "./estado-civil.enum";
-import { genero } from "./genero.enum";
+import { EstadoCivil } from "./estado-civil.enum";
+import { Genero } from "./genero.enum";
 
 export class Empleado {
   idPersona: number = 0;
@@ -11,11 +12,11 @@ export class Empleado {
   cuil: string  = "";
   domicilio: string | undefined;
   contacto: string | undefined;
-  categoria: string | undefined;
-  puesto: EmpleadoPuesto | undefined;
-  genero!: genero;
+  categoria!: EmpleadoCategoria;
+  puesto!: EmpleadoPuesto;
+  genero!: Genero;
   estado: any;
-  estadoCivil!: estadoCivil;
+  estadoCivil!: EstadoCivil;
   info: any;
   fechaAlta!: Date;
   fechaBaja!: Date;
@@ -33,6 +34,8 @@ export class Empleado {
       this.domicilio = dto.domicilio;
       this.genero = dto.genero;
       this.estadoCivil = dto.estadoCivil;
+      this.categoria = dto.categoria;
+      this.puesto = dto.puesto;
       this.fechaAlta = new Date(dto.fechaAlta);
       this.fechaBaja = new Date(dto.fechaBaja);
 
