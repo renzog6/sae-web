@@ -20,6 +20,7 @@ import { EmpleadoModule } from "./components/empleado/empleado.module";
 import { FooterComponent } from "./home/footer/footer.component";
 
 import { CustomDateParserFormatter } from "./services/date-formatter.service";
+import { FilterPipe } from "./services/filter.pipe";
 
 
 

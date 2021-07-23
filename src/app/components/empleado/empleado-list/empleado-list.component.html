@@ -9,7 +9,7 @@
                     <h5 class="title">Empleados</h5>
                     <form>
                         <div class="form-group form-inline">
-                            <input class="form-control ml-2" placeholder="Buscar..." type="text" [formControl]="filter" />
+                            <input class="form-control ml-2" placeholder="Buscar..." type="text" id="search-text" aria-describedby="search-text" [(ngModel)]="searchText" autofocus>
                         </div>
                     </form>
                 </div>
@@ -25,10 +25,12 @@
                                 <th>Accion</th>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let empleado of empleados; let i = index" (click)="setActive(empleado,i);" [class.table-active]="i == currentIndex">
+                                <tr *ngFor="let empleado of empleados | appFilter: searchText; let i = index" (click)="setActive(empleado,i);" [class.table-active]="i == currentIndex">
                                     <td>{{empleado.apellido}} {{empleado.nombre}}</td>
                                     <td>{{empleado.dni}}</td>
-                                    <td>{{empleado.getAntiguedad()}}</td>
+                                    <td>
+                                        <app-antiguedad [fechaIn]="empleado.fechaAlta"></app-antiguedad>
+                                    </td>
                                     <td>{{empleado.puesto.nombre}}</td>
                                     <td>{{empleado.categoria.nombre}}</td>
                                     <td> <a routerLink="{{empleado.idPersona}}">Edit</a></td>

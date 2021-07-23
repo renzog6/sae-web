@@ -9,13 +9,17 @@ import { EmpleadoComponent } from "./empleado.component";
 import { EmpleadoListComponent } from "./empleado-list/empleado-list.component";
 import { EmpleadoDetailComponent } from "./empleado-detail/empleado-detail.component";
 import { EmpleadoEditComponent } from "./empleado-edit/empleado-edit.component";
+import { AntiguedadComponent } from "./antiguedad";
+import { FilterPipe } from "src/app/services/filter.pipe";
 
 @NgModule({
   declarations: [
     EmpleadoComponent,
     EmpleadoListComponent,
     EmpleadoDetailComponent,
-    EmpleadoEditComponent
+    EmpleadoEditComponent,
+    AntiguedadComponent,
+    FilterPipe
   ],
   imports: [
     CommonModule,

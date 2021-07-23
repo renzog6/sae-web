@@ -1,29 +1,31 @@
+import { Direccion } from "./direccion.model";
 import { EmpleadoCategoria } from "./empleado-categoria.model";
 import { EmpleadoPuesto } from "./empleado-puesto.model";
 import { EstadoCivil } from "./estado-civil.enum";
 import { Genero } from "./genero.enum";
 
 export class Empleado {
-  idPersona: number = 0;
-  nombre: string = "";
-  apellido: string = "";
+
+  idPersona!: Number;// = 0;
+  nombre!: String;// = "";
+  apellido!: String;// = "";
   nacimiento!: Date;// = new Date();
-  dni: string = "";
-  cuil: string  = "";
-  domicilio: string | undefined;
+  dni!: String; //= "";
+  cuil!: String;//  = "";
+  domicilio!: Direccion;
   contacto: string | undefined;
   categoria!: EmpleadoCategoria;
   puesto!: EmpleadoPuesto;
   genero!: Genero;
   estado: any;
   estadoCivil!: EstadoCivil;
-  info: any;
+  info!: String;
   fechaAlta!: Date;
   fechaBaja!: Date;
 
   constructor() {}
 
-  setDatos(dto: any): void {
+/*   setDatos(dto: any): void {
     try {
       this.idPersona = dto.idPersona;
       this.nombre = dto.nombre;
@@ -74,5 +76,5 @@ export class Empleado {
       console.error("Log error", error);
     }
     return edad;
-  }
+  } */
 }

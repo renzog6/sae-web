@@ -30,8 +30,8 @@ export class EmpleadoEditComponent implements OnInit {
     //this.empleado.setDatos(this.dto);
     this.service.emitter.subscribe(
       data=>{
-        this.empleado.setDatos(data);
-        //this.empleado=data;
+        //this.empleado.setDatos(data);
+        this.empleado=data;
         this.dateNa = { day: this.empleado.nacimiento.getUTCDate(), month: this.empleado.nacimiento.getUTCMonth() + 1, year: this.empleado.nacimiento.getUTCFullYear()};
         this.dateAlta = { day: this.empleado.fechaAlta.getUTCDate(), month: this.empleado.fechaAlta.getUTCMonth() + 1, year: this.empleado.fechaAlta.getUTCFullYear()};
         console.log(data)

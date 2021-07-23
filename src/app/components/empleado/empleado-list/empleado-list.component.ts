@@ -1,9 +1,7 @@
-import { CursorError } from '@angular/compiler/src/ml_parser/lexer';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { Empleado } from 'src/app/models/empleado.model';
-import { EstadoCivil } from 'src/app/models/estado-civil.enum';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 
 @Component({
@@ -13,11 +11,12 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 })
 export class EmpleadoListComponent implements OnInit {
 
-  empleados: Empleado[] = [];
+  empleados!: Empleado[];// = [];
   current: Empleado = new Empleado();
   currentIndex = -1;
   title = '';
 
+  searchText = '';
   filter = new FormControl('');
 
   constructor(
@@ -28,7 +27,7 @@ export class EmpleadoListComponent implements OnInit {
     this.retrieve();
   }
 
-/*   retrieve(): void {
+  retrieve(): void {
     this.service.getAll()
       .subscribe(
         data => {
@@ -38,9 +37,9 @@ export class EmpleadoListComponent implements OnInit {
         error => {
           console.log(error);
         });
-  } */
-
-  retrieve(): void {
+  }
+/*
+   retrieve(): void {
     this.service.getAll()
     .pipe(map(data => {
       return data.map(item => {
@@ -61,9 +60,9 @@ export class EmpleadoListComponent implements OnInit {
           info:item.info,
           fechaAlta:item.fechaAlta,
           fechaBaja:item.fechaBaja,
-          setDatos:item.setDatos,
-          getEdad:item.getEdad,
-          getAntiguedad:Number
+          //setDatos:item.setDatos,
+          //getEdad:item.getEdad,
+          //getAntiguedad:Number
         }
         return empleado
       })
@@ -71,6 +70,7 @@ export class EmpleadoListComponent implements OnInit {
     .subscribe(data=>this.empleados=data);
 
   }
+  */
 
   refreshList(): void {
     this.retrieve();
