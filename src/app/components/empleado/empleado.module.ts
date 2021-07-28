@@ -10,7 +10,7 @@ import { EmpleadoListComponent } from "./empleado-list/empleado-list.component";
 import { EmpleadoDetailComponent } from "./empleado-detail/empleado-detail.component";
 import { EmpleadoEditComponent } from "./empleado-edit/empleado-edit.component";
 import { AntiguedadComponent } from "./antiguedad";
-import { FilterPipe } from "src/app/services/filter.pipe";
+import { EmpleadoFilterPipe } from '../../services/empleado-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -19,14 +19,14 @@ import { FilterPipe } from "src/app/services/filter.pipe";
     EmpleadoDetailComponent,
     EmpleadoEditComponent,
     AntiguedadComponent,
-    FilterPipe
+    EmpleadoFilterPipe
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     EmpleadoRoutingModule,
-    NgbModule,
+    NgbModule
   ],
   exports: [
     EmpleadoListComponent,

@@ -5,7 +5,8 @@
             <div class="container-fluid">
                 <h5 class="card-title">Empleados</h5>
                 <a [routerLink]="'list'" routerLinkActive="active">Todos</a>
-                <button class="btn btn-sm btn-outline-secondary" type="button" [routerLink]="'add'" routerLinkActive="active">Nuevo</button>
+                <button class="btn btn-sm btn-outline-secondary" type="button" [routerLink]="'list'" routerLinkActive="active">Todos</button>
+                <button class="btn btn-sm btn-outline-secondary" type="button" [routerLink]="'add'" routerLinkActive="">Nuevo</button>
             </div>
         </nav>
 
@@ -13,7 +14,7 @@
     <div class="row">
         <router-outlet></router-outlet>
     </div>
-    <!-- 
+    <!--
     <div class="row">
         <div class="col-xs-3 col-md-5">
             <app-empleado-list></app-empleado-list>
