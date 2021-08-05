@@ -1,12 +1,7 @@
 "use strict";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import {
-  NgbCalendar,
-  NgbDateAdapter,
-  NgbDateParserFormatter,
-  NgbDateStruct,
-} from "@ng-bootstrap/ng-bootstrap";
+import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
 import { Observable } from "rxjs";
 import { EmpleadoCategoria } from "src/app/models/empleado-categoria.model";
 import { EmpleadoPuesto } from "src/app/models/empleado-puesto.model";
@@ -24,6 +19,7 @@ import { EmpleadoService } from "src/app/services/empleado.service";
   styleUrls: ["./empleado-detail.component.css"],
 })
 export class EmpleadoDetailComponent implements OnInit {
+
   empleado: Empleado = new Empleado();
   dateNacimiento!: NgbDateStruct;
   dateAlta!: NgbDateStruct;
@@ -31,9 +27,8 @@ export class EmpleadoDetailComponent implements OnInit {
   generos = Object.values(Genero);
   estadoCivils = Object.values(EstadoCivil);
 
-  categorias!:EmpleadoCategoria[];
-  puetos!:EmpleadoPuesto[];
-
+  categorias!: EmpleadoCategoria[];
+  puetos!: EmpleadoPuesto[];
 
   message = "";
 
@@ -44,47 +39,52 @@ export class EmpleadoDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    route.params.subscribe((params) =>
-    this.getEmpleado(params["id"])
-    );
+    route.params.subscribe((params) => this.getEmpleado(params["id"]));
   }
 
   ngOnInit(): void {
-    //this.getEmpleado(this.route.snapshot.params.id);
+    this.loadPuestos();
+    this.loadCategorias();
+  }
 
+  private loadCategorias(): void {
+    this.categoriaService.getAll().subscribe(
+      (data) => {
+        this.categorias = data;
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  private loadPuestos(): void {
     this.puestoService.getAll().subscribe(
-      data => {
+      (data) => {
         this.puetos = data;
         console.log(data);
       },
-      error => {
+      (error) => {
         console.log(error);
-      });
-
-      this.categoriaService.getAll().subscribe(
-        data => {
-          this.categorias = data;
-          console.log(data);
-        },
-        error => {
-          console.log(error);
-        });
+      }
+    );
   }
 
   getEmpleado(id: string): void {
     this.empleadoService.get(id).subscribe(
       (data) => {
-      this.setDatos(data);
-      this.dateNacimiento = {
-        day: this.empleado.nacimiento.getUTCDate(),
-        month: this.empleado.nacimiento.getUTCMonth() + 1,
-        year: this.empleado.nacimiento.getUTCFullYear(),
-      };
-      this.dateAlta = {
-        day: this.empleado.fechaAlta.getUTCDate(),
-        month: this.empleado.fechaAlta.getUTCMonth() + 1,
-        year: this.empleado.fechaAlta.getUTCFullYear(),
-      };
+        this.setDatos(data);
+        this.dateNacimiento = {
+          day: this.empleado.nacimiento.getUTCDate(),
+          month: this.empleado.nacimiento.getUTCMonth() + 1,
+          year: this.empleado.nacimiento.getUTCFullYear(),
+        };
+        this.dateAlta = {
+          day: this.empleado.fechaAlta.getUTCDate(),
+          month: this.empleado.fechaAlta.getUTCMonth() + 1,
+          year: this.empleado.fechaAlta.getUTCFullYear(),
+        };
         console.log(this.empleado);
       },
       (error) => {
@@ -108,7 +108,6 @@ export class EmpleadoDetailComponent implements OnInit {
       this.empleado.puesto = dto.puesto;
       this.empleado.fechaAlta = new Date(dto.fechaAlta);
       this.empleado.fechaBaja = new Date(dto.fechaBaja);
-
     } catch (error) {
       console.error("Log error", error);
     }
@@ -120,20 +119,22 @@ export class EmpleadoDetailComponent implements OnInit {
     this.empleado.nacimiento = this.updateDate(this.dateNacimiento);
     this.empleado.fechaAlta = this.updateDate(this.dateAlta);
 
-    this.empleadoService.update(this.empleado.idPersona, this.empleado).subscribe(
-      (response) => {
-        console.log("UPDATE SUBCRIBE::: ");
-        console.log(response);
-        this.message = response.message
-          ? response.message
-          : "This tutorial was updated successfully!";
-      },
-      (error) => {
-        console.log("UPDATE ERROR::: " + error.message);
-        this.message = error.message;
-        //this.router.navigate(['/empleado/list'])
-      }
-    );
+    this.empleadoService
+      .update(this.empleado.idPersona, this.empleado)
+      .subscribe(
+        (response) => {
+          console.log("UPDATE SUBCRIBE::: ");
+          console.log(response);
+          this.message = response.message
+            ? response.message
+            : "This tutorial was updated successfully!";
+        },
+        (error) => {
+          console.log("UPDATE ERROR::: " + error.message);
+          this.message = error.message;
+          //this.router.navigate(['/empleado/list'])
+        }
+      );
   }
 
   updateDate(newdate: NgbDateStruct): any {

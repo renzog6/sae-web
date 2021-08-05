@@ -1,4 +1,4 @@
-import { Injectable,Output, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
@@ -11,12 +11,12 @@ import { EmpleadoCategoria } from '../models/empleado-categoria.model';
 })
 export class EmpleadoCategoriaService {
 
-  private apiUrl = environment.baseUrl+'/api/empleado-categoria';
+  private apiUrl = environment.baseUrl + '/api/empleado-categoria';
 
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<EmpleadoCategoria[]> {
-    return this.http.get<EmpleadoCategoria[]>(this.apiUrl+'/list').pipe(
+    return this.http.get<EmpleadoCategoria[]>(this.apiUrl + '/list').pipe(
       retry(1),
       catchError(this.handleError)
     );
@@ -38,7 +38,7 @@ export class EmpleadoCategoriaService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  handleError(error:any) {
+  handleError(error: any) {
 
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {

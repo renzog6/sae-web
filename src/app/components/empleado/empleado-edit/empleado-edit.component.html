@@ -1,141 +1,250 @@
-<div class="panel-header panel-header-sm">
-</div>
+<div class="panel-header panel-header-sm"></div>
 <div class="main-content">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="title">Detalle</h5>
-        </div>
-        <div class="card-body">
-            <form>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card-user">
-                            <div class="image">
-                                <img src="../assets/img/bg5.jpg" alt="...">
-                            </div>
-                            <div class="card-body">
-                                <div class="author">
-                                    <a href="#">
-                                        <img class="avatar border-gray" src="../assets/img/mike.jpg" alt="...">
-                                        <h5 class="title">Subir Imagen</h5>
-                                    </a>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="button-container">
-                                <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-                                          <i class="fab fa-facebook-f"></i>
-                                        </button>
-                                <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-                                          <i class="fab fa-twitter"></i>
-                                        </button>
-                                <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-                                          <i class="fab fa-google-plus-g"></i>
-                                        </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="col-xs-3 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <label>Apellido</label>
-                                    <input type="text" class="form-control" placeholder="Apellido" id="apellido" name="apellido" [(ngModel)]="empleado.apellido" required>
-                                </div>
-                            </div>
-                            <div class="col-xs-3 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <label>Nombre/s</label>
-                                    <input type="text" class="form-control" placeholder="Nombre" id="nombre" name="nombre" [(ngModel)]="empleado.nombre" required>
-                                </div>
-                            </div>
-
-                            <div class="w-100"></div>
-                            <div class="col-md-6 col-lg-3 pr-1">
-                                <div class="form-group">
-                                    <label>D.N.I</label>
-                                    <input type="text" class="form-control" placeholder="D.N.I" id="dni" name="dni" [(ngModel)]="empleado.dni" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3 px-1">
-                                <div class="form-group">
-                                    <label>Nacimineto</label>
-                                    <input class="form-control" placeholder="dd/mm/aaaa" id="nacimento" name="nacimineto" [(ngModel)]="dateNa" ngbDatepicker #dNa="ngbDatepicker" (click)="dNa.toggle()">
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-6 col-lg-3 pr-1">
-                                <div class="form-group">
-                                    <label>Genero</label>
-                                    <select class="form-control" name="genero">
-                                      <option [ngValue]="null" disabled>Selecionar</option>
-                                      <option *ngFor="let g of generos" [ngValue]="empleado.genero" (click)="onGeneroChanged(g)">{{g}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3 px-1">
-                                <div class="form-group">
-                                    <label>Estado Civil</label>
-                                    <input type="text" class="form-control" placeholder="Soltero" id="estadoCivil" name="estadoCivil" [(ngModel)]="empleado.estadoCivil" required>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Domicilio</label>
-                                    <input type="text" class="form-control" placeholder="En la casa" id="domicilio" name="domicilio" [(ngModel)]="empleado.domicilio">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 pr-1">
-                                <div class="form-group">
-                                    <label>City</label>
-
-                                    <form class="form-inline">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="dateNa" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()">
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-                            <div class="col-md-6 px-1">
-                                <div class="form-group">
-                                    <label>Country</label>
-                                    <input type="text" class="form-control" placeholder="Country" value="Andrew">
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <hr>
-                            <h3>Datos Laborales</h3>
-                            <div class="col-md-12">
-
-                                <div class="col-md-6 col-lg-3 px-1">
-                                    <div class="form-group">
-                                        <label>Fecha de Alta</label>
-                                        <input class="form-control" placeholder="dd/mm/aaaa" id="fechaAlta" name="fechaAlta" [(ngModel)]="dateAlta" ngbDatepicker #dAlta="ngbDatepicker" (click)="dAlta.toggle()">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>About Me</label>
-                                    <textarea rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="Mike">Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.
-                                    </textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="card">
+    <div class="card-body">
+      <form>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card-user">
+              <div class="image">
+                <img src="../assets/img/bg5.jpg" alt="..." />
+              </div>
+              <div class="card-body">
+                <div class="author">
+                  <a href="#">
+                    <img
+                      class="avatar border-gray"
+                      src="../assets/img/mike.jpg"
+                      alt="..."
+                    />
+                    <h5 class="title">Subir Imagen</h5>
+                  </a>
                 </div>
-            </form>
+              </div>
+              <hr />
+
+              <div class="form-group">
+                <label>Observaciones</label>
+                <textarea
+                  rows="4"
+                  cols="80"
+                  class="form-control"
+                  placeholder="Here can be your description"
+                  value="Mike"
+                >
+Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.
+                  </textarea
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <h6>Datos Personales</h6>
+            <div class="row">
+              <div class="col-xs-3 col-sm-6 col-md-6">
+                <div class="form-group">
+                  <label>Apellido</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Apellido"
+                    id="apellido"
+                    name="apellido"
+                    [(ngModel)]="empleado.apellido"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-xs-3 col-sm-6 col-md-6">
+                <div class="form-group">
+                  <label>Nombre/s</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Nombre"
+                    id="nombre"
+                    name="nombre"
+                    [(ngModel)]="empleado.nombre"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col-md-6 col-lg-3 pr-1">
+                <div class="form-group">
+                  <label>D.N.I</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="D.N.I"
+                    id="dni"
+                    name="dni"
+                    [(ngModel)]="empleado.dni"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 px-1">
+                <div class="form-group">
+                  <label>Nacimineto</label>
+                  <input
+                    class="form-control"
+                    placeholder="dd/mm/aaaa"
+                    id="nacimento"
+                    name="nacimineto"
+                    [(ngModel)]="dateNacimiento"
+                    ngbDatepicker
+                    #dNa="ngbDatepicker"
+                    (click)="dNa.toggle()"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 pr-1">
+                <div class="form-group">
+                  <label>Genero</label>
+                  <select
+                    class="form-control"
+                    name="genero"
+                    [(ngModel)]="empleado.genero"
+                  >
+                    <option [ngValue]="null" disabled>Selecionar</option>
+                    <option
+                      *ngFor="let g of generos"
+                      [ngValue]="g"
+                      (click)="onGeneroChanged(g)"
+                    >
+                      {{ g }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 px-1">
+                <div class="form-group">
+                  <label>Estado Civil</label>
+                  <select
+                    class="form-control"
+                    name="estadoCivil"
+                    [(ngModel)]="empleado.estadoCivil"
+                  >
+                    <option [ngValue]="null" disabled>Selecionar</option>
+                    <option *ngFor="let e of estadoCivils" [ngValue]="e">
+                      {{ e }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Domicilio</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="En la casa"
+                    id="domicilio"
+                    name="domicilio"
+                    [(ngModel)]="empleado.domicilio"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Localidad</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="localidad"
+                    name="localidad"
+                    [(ngModel)]="empleado.domicilio"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <hr />
+              <h6>Datos Laborales</h6>
+              <div class="w-100"></div>
+              <div class="col-md-6 col-lg-3 pr-1">
+                <div class="form-group">
+                  <label>C.U.I.L</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="C.U.I.L"
+                    id="cuil"
+                    name="cuil"
+                    [(ngModel)]="empleado.cuil"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-3 px-1">
+                <div class="form-group">
+                  <label>Fecha de Alta</label>
+                  <input
+                    class="form-control"
+                    placeholder="dd/mm/aaaa"
+                    id="fechaAlta"
+                    name="fechaAlta"
+                    [(ngModel)]="dateAlta"
+                    ngbDatepicker
+                    #dAlta="ngbDatepicker"
+                    (click)="dAlta.toggle()"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-3 pr-1">
+                <div class="form-group">
+                  <label>Pueto</label>
+                  <select
+                    class="form-control"
+                    name="puesto"
+                    [(ngModel)]="empleado.puesto"
+                  >
+                    <option [ngValue]="empleado.puesto" disabled>
+                      {{ empleado.puesto.nombre }}
+                    </option>
+                    <option *ngFor="let item of puetos" [ngValue]="item">
+                      {{ item.nombre }} > {{ item.info }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-3 pr-1">
+                <div class="form-group">
+                  <label>Categoria</label>
+                  <select
+                    class="form-control"
+                    name="categoria"
+                    [(ngModel)]="empleado.categoria"
+                  >
+                    <option [ngValue]="empleado.categoria" disabled>
+                      {{ empleado.categoria.nombre }}
+                    </option>
+                    <option *ngFor="let item of categorias" [ngValue]="item">
+                      {{ item.nombre }} > {{ item.info }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="boton_guardar">
+          <hr />
+          <button class="btn btn-success guardar">Guardar</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>

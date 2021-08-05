@@ -5,13 +5,12 @@ import { EstadoCivil } from "./estado-civil.enum";
 import { Genero } from "./genero.enum";
 
 export class Empleado {
-
-  idPersona!: Number;// = 0;
-  nombre!: String;// = "";
-  apellido!: String;// = "";
-  nacimiento!: Date;// = new Date();
+  idPersona!: number; // = 0;
+  nombre!: string; // = "";
+  apellido!: String; // = "";
+  nacimiento!: Date; // = new Date();
   dni!: String; //= "";
-  cuil!: String;//  = "";
+  cuil!: String; //  = "";
   domicilio!: Direccion;
   contacto: string | undefined;
   categoria!: EmpleadoCategoria;
@@ -25,7 +24,7 @@ export class Empleado {
 
   constructor() {}
 
-/*   setDatos(dto: any): void {
+  /*   setDatos(dto: any): void {
     try {
       this.idPersona = dto.idPersona;
       this.nombre = dto.nombre;
