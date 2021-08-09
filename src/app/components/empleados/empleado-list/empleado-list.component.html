@@ -1,0 +1,69 @@
+<section class="container">
+  <mat-form-field appearance="standard">
+    <mat-label>Buscar...</mat-label>
+    <input
+      matInput
+      (keyup)="applyFilter($event)"
+      placeholder="Ex. ium"
+      #input
+    />
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="apellido">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Empleado</th>
+      <td mat-cell *matCellDef="let empleado">
+        {{ getFullName(empleado) }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="dni">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>DNI</th>
+      <td mat-cell *matCellDef="let empleado">{{ empleado.dni }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaAlta">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Alta</th>
+      <td mat-cell *matCellDef="let empleado">
+        {{ empleado.fechaAlta | date: "dd/MM/yyyy" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="antiguedad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Antiguedad</th>
+      <td mat-cell *matCellDef="let empleado">
+        {{ calcAntiguedad(empleado.fechaAlta) }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="puesto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Puesto</th>
+      <td mat-cell *matCellDef="let empleado">{{ empleado.puesto.nombre }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="categoria">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoria</th>
+      <td mat-cell *matCellDef="let empleado">
+        {{ empleado.categoria.nombre }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="details">
+      <th mat-header-cell *matHeaderCellDef>Detalle</th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="redirectToDetails(element.idempleado)"
+        >
+          <mat-icon class="mat-18">reorder</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row matRipple *matRowDef="let row; columns: columnas"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]">
+  </mat-paginator>
+</section>

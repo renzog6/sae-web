@@ -1,16 +1,16 @@
-import { Observable } from 'rxjs';
 import { Contacto } from './contacto.model';
 
 export class Empresa {
-  id: number | undefined;
-  nombre: string ="";
-  razonSocial: string | undefined;
-  cuit: string | undefined;
-  contactoList: Observable<Contacto[]> | undefined;
+  idEmpresa!: number;
+  nombre!: string;
+  razonSocial!: string;
+  cuit!: string;
+  contactoList!: Contacto[];
   direccionList: any;
 
   getName(): string {
     return `${this.nombre} ${this.cuit}`;
   }
-
 }
+
+

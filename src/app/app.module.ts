@@ -1,47 +1,51 @@
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { HttpClientModule } from "@angular/common/http";
-import { NgbDateParserFormatter, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from "@angular/common";
 import localeEsAR from "@angular/common/locales/es-AR";
 registerLocaleData(localeEsAR, "es-AR");
 
-import { AppComponent } from "./app.component";
-import { AppRoutingModule } from "./app-routing.module";
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { HomeComponent } from "./home/home.component";
-import { ErrorComponent } from "./home/error/error.component";
-import { NavbarComponent } from "./home/navbar/navbar.component";
+import { LayoutComponent } from './layout/layout.component';
+import { HomeComponent } from './layout/home/home.component';
+import { HeaderComponent } from './layout/header/header.component';
+import { SidenavComponent } from './layout/sidenav/sidenav.component';
 
-import { EmpresaModule } from "./components/empresa/empresa.module";
-import { EmpleadoModule } from "./components/empleado/empleado.module";
-import { FooterComponent } from "./home/footer/footer.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from '@angular/common/http';
 
-import { CustomDateParserFormatter } from "./services/date-formatter.service";
+import { SharedModule } from './layout/shared.module';
+import { NotFoundComponent } from './layout/errors/not-found/not-found.component';
+import { ServerErrorComponent } from './layout/errors/server-error/server-error.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    LayoutComponent,
     HomeComponent,
-    ErrorComponent,
-    NavbarComponent,
-    FooterComponent
+    HeaderComponent,
+    SidenavComponent,
+    NotFoundComponent,
+    ServerErrorComponent,
   ],
   imports: [
-    NgbModule,
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     HttpClientModule,
-    EmpresaModule,
-    EmpleadoModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: "es-AR" },
-  // {provide: NgbDateAdapter, useClass: CustomAdapter},
-   {provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter}
+
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

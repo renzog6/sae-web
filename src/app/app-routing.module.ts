@@ -1,27 +1,21 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-
-import { HomeComponent } from "./home/home.component";
-import { ErrorComponent } from "./home/error/error.component";
-
-import { EmpresaComponent } from "./components/empresa/empresa.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from './layout/errors/not-found/not-found.component';
+import { ServerErrorComponent } from './layout/errors/server-error/server-error.component';
+import { HomeComponent } from './layout/home/home.component';
 
 const routes: Routes = [
-  { path: "home", component: HomeComponent },
-  { path: "empresa", component: EmpresaComponent },
-  {
-    path: "empleado",
-    loadChildren: () =>
-      import(`./components/empleado/empleado.module`).then(
-        (m) => m.EmpleadoModule
-      ),
-  },
-  { path: "", pathMatch: "full", redirectTo: "home" },
-  { path: "**", component: ErrorComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'empresas', loadChildren: () => import('./components/empresas/empresas.module').then(m => m.EmpresasModule) },
+  { path: 'empleados', loadChildren: () => import('./components/empleados/empleados.module').then(m => m.EmpleadosModule) },
+  { path: '404', component: NotFoundComponent },
+  { path: '500', component: ServerErrorComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', redirectTo: '/404', pathMatch: 'full' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

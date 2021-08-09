@@ -1,6 +1,8 @@
-import { Injectable,Output, EventEmitter } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { throwError } from 'rxjs';
 import { Observable } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Empresa } from '../models/empresa.model';
 
@@ -9,37 +11,43 @@ import { Empresa } from '../models/empresa.model';
 })
 export class EmpresaService {
 
-  empresa: Empresa = new Empresa;
-  @Output()
-  empresaEmitter = new EventEmitter<Empresa>();
+  private apiUrl = environment.baseUrl + '/api/empresa';
 
-  setEmpresa(nuevaEmpresa:Empresa):void{
-    this.empresa = nuevaEmpresa;
-    this.cambiarEmpresa();
-  }
+  headers = new HttpHeaders()
+    .set("Content-Type", "application/json")
+    .set("Accept", "application/json");
 
-  cambiarEmpresa():void{
-    this.empresaEmitter.emit(this.empresa);
-  }
+  httpOptions = {
+    headers: this.headers,
+  };
 
-  private apiUrl = environment.baseUrl+'/api/empresa/list';
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  constructor(private http: HttpClient) { }
-
-  getAll(): Observable<Empresa[]> {
-    return this.http.get<Empresa[]>(this.apiUrl);
-  }
-
-  getList(): Observable<any> {
-    return this.http.get(`${this.apiUrl}`);
+  getList(): Observable<Empresa[]> {
+    console.log('URL::', this.apiUrl)
+    return this.http.get<Empresa[]>(`${this.apiUrl}/list`, this.httpOptions).pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
   }
 
   getItem(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  getUrl():String{
-    return this.apiUrl;
+  handleError(error: any) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    window.alert(errorMessage);
+    return throwError(errorMessage);
   }
 
 }

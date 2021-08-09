@@ -1,0 +1,23 @@
+<section>
+  <div class="example-label">Empleados</div>
+  <div class="example-button-row">
+    <button
+      mat-stroked-button
+      color="primary"
+      [routerLink]="'list'"
+      routerLinkActive="active"
+    >
+      Todos
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      [routerLink]="'create'"
+      routerLinkActive=""
+    >
+      Nuevo
+    </button>
+  </div>
+</section>
+<mat-divider></mat-divider>
+<router-outlet></router-outlet>

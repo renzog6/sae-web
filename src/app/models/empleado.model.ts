@@ -1,28 +1,44 @@
+import { Contacto } from "./contacto.model";
 import { Direccion } from "./direccion.model";
 import { EmpleadoCategoria } from "./empleado-categoria.model";
 import { EmpleadoPuesto } from "./empleado-puesto.model";
-import { EstadoCivil } from "./estado-civil.enum";
+import { Estado, EstadoCivil } from "./estado-civil.enum";
 import { Genero } from "./genero.enum";
 
+export interface IEmpleado {
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+  dni: string;
+  gender: Genero;
+  address: Direccion;
+  maritalStatus: EstadoCivil;
+  dateStart: Date;
+  cuil: string;
+  category: EmpleadoCategoria;
+  position: EmpleadoPuesto;
+  info: string;
+};
+
 export class Empleado {
-  idPersona!: number; // = 0;
-  nombre!: string; // = "";
-  apellido!: String; // = "";
-  nacimiento!: Date; // = new Date();
-  dni!: String; //= "";
-  cuil!: String; //  = "";
+  idPersona!: number;
+  nombre!: string;
+  apellido!: String;
+  nacimiento!: Date;
+  dni!: String;
+  cuil!: String;
   domicilio!: Direccion;
-  contacto: string | undefined;
+  contacto!: Contacto;
   categoria!: EmpleadoCategoria;
   puesto!: EmpleadoPuesto;
   genero!: Genero;
-  estado: any;
+  estado!: Estado;
   estadoCivil!: EstadoCivil;
   info!: String;
   fechaAlta!: Date;
   fechaBaja!: Date;
 
-  constructor() {}
+  constructor() { }
 
   /*   setDatos(dto: any): void {
     try {
@@ -45,22 +61,6 @@ export class Empleado {
     }
   }
 
-  getEdad(): number {
-    let edad: number = 0;
-    try {
-      const hoy = new Date();
-      edad = hoy.getFullYear() - this.nacimiento.getFullYear();
-      const m = hoy.getMonth() - this.nacimiento.getMonth();
-
-      if (m < 0 || (m === 0 && hoy.getDate() < this.nacimiento.getDate())) {
-        edad--;
-      }
-    } catch (error) {
-      console.error("Log error", error);
-    }
-    return edad;
-  }
-
   getAntiguedad(): number {
     let edad: number = 0;
     try {
@@ -76,4 +76,4 @@ export class Empleado {
     }
     return edad;
   } */
-}
+};

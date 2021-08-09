@@ -1,27 +1,20 @@
-import { Injectable, Output, EventEmitter } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from "rxjs";
 import { retry, catchError, tap, map } from "rxjs/operators";
 import { environment } from "src/environments/environment";
-import { Empleado } from "../models/empleado.model";
+import { Empleado, IEmpleado } from "../models/empleado.model";
+import { Direccion } from "../models/direccion.model";
+import { EmpleadoCategoria } from "../models/empleado-categoria.model";
+import { EmpleadoPuesto } from "../models/empleado-puesto.model";
+import { Genero } from "../models/genero.enum";
+import { Estado, EstadoCivil } from "../models/estado-civil.enum";
+import { Contacto } from "../models/contacto.model";
 
 @Injectable({
   providedIn: "root",
 })
 export class EmpleadoService {
-
-  empleado: Empleado = new Empleado();
-  @Output()
-  emitter = new EventEmitter<Empleado>();
-
-  setActive(current: Empleado): void {
-    this.empleado = current;
-    this.cambiar();
-  }
-
-  cambiar(): void {
-    this.emitter.emit(this.empleado);
-  }
 
   private apiUrl = environment.baseUrl + "/api/empleado";
 
@@ -35,58 +28,49 @@ export class EmpleadoService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getAll(): Observable<Empleado[]> {
+  getList(): Observable<Empleado[]> {
     return this.httpClient
       .get<Empleado[]>(this.apiUrl + "/list", this.httpOptions)
       .pipe(
-/*         tap((data) => {
-          return data.map((item) => {
-            const empleado: Empleado = {
-              idPersona: item.idPersona,
-              nombre: item.nombre,
-              apellido: item.apellido,
-              nacimiento: item.nacimiento,
-              dni: item.dni,
-              cuil: item.cuil,
-              domicilio: item.domicilio,
-              contacto: item.contacto,
-              categoria: item.categoria,
-              puesto: item.puesto,
-              genero: item.genero,
-              estado: item.estado,
-              estadoCivil: item.estadoCivil,
-              info: item.info,
-              fechaAlta: item.fechaAlta,
-              fechaBaja: item.fechaBaja,
-              //setDatos:item.setDatos,
-              //getEdad:item.getEdad,
-              //getAntiguedad:Number
-            };
-            return empleado;
-          });
-        }), */
         retry(1),
         catchError(this.handleError)
       );
   }
 
- /* get(id: any): Observable<Empleado> {
-    return this.httpClient.get<Empleado>(`${this.apiUrl}/${id}`,this.httpClientOptions);
-  }*/
-
-  // Get single object
-  get(id:any): Observable<Empleado> {
+  get(id: any): Observable<Empleado> {
     let API_URL = `${this.apiUrl}/${id}`;
     return this.httpClient.get(API_URL, this.httpOptions)
       .pipe(map((res: any) => {
-          return res || {}
-        }),
+        return res || {}
+      }),
         catchError(this.handleError)
       )
   }
 
-  create(data: any): Observable<any> {
-    return this.httpClient.post(this.apiUrl, data);
+  create(data: IEmpleado): Observable<any> {
+    console.log('A-CREATE::::', this.dataToEmpleado(data));
+    return this.httpClient.post(this.apiUrl + "/create", this.dataToEmpleado(data), this.httpOptions);
+  }
+
+  dataToEmpleado(data: IEmpleado): Empleado {
+    let emp = new Empleado();
+    emp.idPersona = -1,
+      emp.nombre = data.firstName,
+      emp.apellido = data.lastName,
+      emp.nacimiento = data.dateOfBirth,
+      emp.dni = data.dni,
+      emp.cuil = "",
+      emp.domicilio = new Direccion,
+      emp.contacto = new Contacto,
+      emp.categoria = data.category,
+      emp.puesto = data.position,
+      emp.genero = data.gender,
+      emp.estado = Estado.ACTIVO,
+      emp.estadoCivil = data.maritalStatus,
+      emp.info = data.info,
+      emp.fechaAlta = data.dateStart,
+      emp.fechaBaja = new Date
+    return emp;
   }
 
   update(id: any, data: any): Observable<any> {

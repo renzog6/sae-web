@@ -1,4 +1,4 @@
-export enum EstadoCivil{
+export enum EstadoCivil {
 
   SOLTERO = "Soltero",
   CASADO = "Casado",
@@ -6,5 +6,12 @@ export enum EstadoCivil{
   VIUDO = "Viudo",
   CONCUBINATO = "Concubinato",
   OTRO = "Otro"
+
+}
+
+export enum Estado {
+  ACTIVO = "Activo",
+  BAJA = "Baja",
+  OTRO = "Otro",
 
 }
