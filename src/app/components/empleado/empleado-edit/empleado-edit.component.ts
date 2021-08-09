@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { EmpleadoCategoria } from 'src/app/models/empleado-categoria.model';
 import { EmpleadoPuesto } from 'src/app/models/empleado-puesto.model';

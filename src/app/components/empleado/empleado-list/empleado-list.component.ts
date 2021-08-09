@@ -19,7 +19,7 @@ export class EmpleadoListComponent implements OnInit {
   filter = new FormControl('');
 
   constructor(
-    private service:EmpleadoService
+    private service: EmpleadoService
   ) { }
 
   ngOnInit(): void {
@@ -37,39 +37,6 @@ export class EmpleadoListComponent implements OnInit {
           console.log(error);
         });
   }
-/*
-   retrieve(): void {
-    this.service.getAll()
-    .pipe(map(data => {
-      return data.map(item => {
-        const empleado: Empleado = {
-          idPersona: item.idPersona,
-          nombre: item.nombre,
-          apellido: item.apellido,
-          nacimiento: item.nacimiento,
-          dni:item.dni,
-          cuil:item.cuil,
-          domicilio:item.domicilio,
-          contacto:item.contacto,
-          categoria:item.categoria,
-          puesto:item.puesto,
-          genero:item.genero,
-          estado:item.estado,
-          estadoCivil:item.estadoCivil,
-          info:item.info,
-          fechaAlta:item.fechaAlta,
-          fechaBaja:item.fechaBaja,
-          //setDatos:item.setDatos,
-          //getEdad:item.getEdad,
-          //getAntiguedad:Number
-        }
-        return empleado
-      })
-    }))
-    .subscribe(data=>this.empleados=data);
-
-  }
-  */
 
   refreshList(): void {
     this.retrieve();
@@ -84,30 +51,30 @@ export class EmpleadoListComponent implements OnInit {
   }
 
   removeAll(): void {
-/*     this.service.deleteAll()
-      .subscribe(
-        response => {
-          console.log(response);
-          this.refreshList();
-        },
-        error => {
-          console.log(error);
-        }); */
+    /*     this.service.deleteAll()
+          .subscribe(
+            response => {
+              console.log(response);
+              this.refreshList();
+            },
+            error => {
+              console.log(error);
+            }); */
   }
 
   search(): void {
-/*     this.current = {};
-    this.currentIndex = -1;
+    /*     this.current = {};
+        this.currentIndex = -1;
 
-    this.service.findByTitle(this.title)
-      .subscribe(
-        data => {
-          this.tutorials = data;
-          console.log(data);
-        },
-        error => {
-          console.log(error);
-        }); */
+        this.service.findByTitle(this.title)
+          .subscribe(
+            data => {
+              this.tutorials = data;
+              console.log(data);
+            },
+            error => {
+              console.log(error);
+            }); */
   }
 
 }
