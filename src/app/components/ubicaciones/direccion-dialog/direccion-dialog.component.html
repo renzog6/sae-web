@@ -1,0 +1,118 @@
+<section fxLayout="row wrap" fxLayoutAlign="center center">
+  <mat-card
+    fxFlex="90%"
+    fxFlex.xs="100%"
+    class="formDireccion"
+    *ngIf="isDataAvailable"
+  >
+    <mat-card-title>Nueva Direccion</mat-card-title>
+    <form
+      [formGroup]="formAddress"
+      autocomplete="off"
+      novalidate
+      (ngSubmit)="create(formAddress.value)"
+      fxLayout="column wrap"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+    >
+      <mat-card-content>
+        <mat-divider></mat-divider>
+
+        <div class="items">
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="Calle"
+              formControlName="street"
+              id="street"
+            />
+            <mat-hint align="end">No mas de 20 caracteres</mat-hint>
+            <mat-error *ngIf="hasError('street', 'required')"
+              >Name is required</mat-error
+            >
+            <mat-error *ngIf="hasError('street', 'maxlength')"
+              >No mas de 20 caracteres</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field class="input-number">
+            <input
+              matInput
+              type="text"
+              placeholder="Numero"
+              formControlName="number"
+              id="number"
+            />
+            <mat-hint align="end">No mas de 5 caracteres.</mat-hint>
+            <mat-error *ngIf="hasError('number', 'required')"
+              >Name is required</mat-error
+            >
+            <mat-error *ngIf="hasError('number', 'maxlength')"
+              >No mas de 5 caracteres</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="Info: Piso 1 / Dpto B"
+              formControlName="info"
+              id="info"
+            />
+            <mat-error *ngIf="hasError('number', 'maxlength')"
+              >No mas de 20 caracteres</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="Localidad"
+              aria-label="Localidad"
+              [formControl]="myControl"
+              [matAutocomplete]="auto"
+              required
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              [displayWith]="displayFn"
+              #auto="matAutocomplete"
+            >
+              <mat-option
+                *ngFor="let option of filteredOptions | async"
+                [value]="option"
+              >
+                {{ option.nombre }} ({{ option.codigoPostal }})
+                {{ option.provincia.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-divider></mat-divider>
+        <button
+          mat-raised-button
+          md-dialog-close
+          color="primary"
+          type="submit"
+          [disabled]="!formAddress.valid"
+        >
+          Crear
+        </button>
+        <button
+          type="button"
+          mat-raised-button
+          md-dialog-close
+          color="warn"
+          (click)="onNoClick()"
+        >
+          Cancelar
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</section>

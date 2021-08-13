@@ -14,6 +14,7 @@
         <mat-divider></mat-divider>
         <h2>Datos Personales</h2>
         <div class="items">
+          <!-- Nombre -->
           <mat-form-field>
             <input
               matInput
@@ -30,7 +31,7 @@
               >No mas de 20 caracteres</mat-error
             >
           </mat-form-field>
-
+          <!-- Apellido -->
           <mat-form-field>
             <input
               matInput
@@ -47,8 +48,8 @@
               >No mas de 20 caracteres</mat-error
             >
           </mat-form-field>
-
-          <mat-form-field>
+          <!-- Nacimiento -->
+          <mat-form-field class="input-small">
             <input
               matInput
               [matDatepicker]="picker"
@@ -64,8 +65,8 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
-
-          <mat-form-field>
+          <!-- Genero -->
+          <mat-form-field class="input-small">
             <mat-label>Genero</mat-label>
             <mat-select formControlName="gender" id="gender" required>
               <mat-option>--</mat-option>
@@ -77,21 +78,21 @@
               >Seleccionar uno.</mat-error
             >
           </mat-form-field>
-
-          <mat-form-field>
+          <!-- DNI -->
+          <mat-form-field class="input-small">
             <input
               matInput
-              type="text"
+              mask="00.000.000"
               placeholder="D.N.I"
               formControlName="dni"
             />
-            <mat-hint align="end">Formato: 12345678</mat-hint>
+            <mat-hint align="end">Sin puntos.</mat-hint>
             <mat-error *ngIf="hasError('dni', 'required')"
               >Address is required</mat-error
             >
           </mat-form-field>
-
-          <mat-form-field>
+          <!-- Estado Civil -->
+          <mat-form-field class="input-small">
             <mat-label>Estado Civil</mat-label>
             <mat-select
               formControlName="maritalStatus"
@@ -107,27 +108,55 @@
               >Seleccionar uno.</mat-error
             >
           </mat-form-field>
-
+        </div>
+        <mat-divider></mat-divider>
+        <h3>Contacto</h3>
+        <div class="items">
+          <!-- Direccion -->
           <mat-form-field>
+            <mat-label>Direccion</mat-label>
+            <input matInput disabled value="{{ addresShow }}" />
+            <button
+              mat-button
+              matSuffix
+              mat-stroked-button
+              aria-label="search"
+              (click)="openDireccionDialog()"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-form-field>
+          <!-- Celular -->
+          <mat-form-field>
+            <mat-label>Celular</mat-label>
             <input
               matInput
-              type="text"
-              placeholder="Direccion"
-              formControlName="address"
+              mask="0000-000 000"
+              placeholder="Numero Celular"
+              formControlName="cellPhone"
             />
-            <mat-hint align="end">Not more then 100 characters long.</mat-hint>
-            <mat-error *ngIf="hasError('address', 'required')"
-              >Address is required</mat-error
-            >
-            <mat-error *ngIf="hasError('address', 'maxlength')"
-              >You have more than 100 characters</mat-error
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-hint>1234-123456</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>email</mat-label>
+            <input
+              type="email"
+              matInput
+              placeholder="pat@example.com"
+              formControlName="email"
+            />
+            <mat-error *ngIf="hasError('email', 'email')"
+              >email incorrecto.</mat-error
             >
           </mat-form-field>
         </div>
         <mat-divider></mat-divider>
         <h2>Datos Laborales</h2>
         <div class="items">
-          <mat-form-field>
+          <!-- Fecha Alta -->
+          <mat-form-field class="input-small">
             <input
               matInput
               [matDatepicker]="picker2"
@@ -143,21 +172,19 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
-
-          <mat-form-field>
+          <!-- CUIL -->
+          <mat-form-field class="input-small">
             <input
               matInput
-              type="text"
+              mask="00-00000000-0"
               placeholder="C.U.I.L"
               formControlName="cuil"
               id="cuil"
             />
-            <mat-hint align="end">Formato: 12-12345678-1</mat-hint>
-            <mat-error *ngIf="hasError('cuil', 'maxlength')"
-              >Formato 12-12345678-1</mat-error
-            >
+            <mat-hint align="end">Sin guiones</mat-hint>
+            <mat-error *ngIf="hasError('cuil', 'maxlength')">Error</mat-error>
           </mat-form-field>
-
+          <!-- Categoria -->
           <mat-form-field>
             <mat-label>Categoria</mat-label>
             <mat-select formControlName="category" id="category" required>

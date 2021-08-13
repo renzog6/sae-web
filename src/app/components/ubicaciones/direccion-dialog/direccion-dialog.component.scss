@@ -1,4 +1,4 @@
-.formEmpleado {
+.formDireccion {
   min-width: 350px;
   margin-top: 5px;
   .items {
@@ -10,13 +10,12 @@
     margin: auto;
     padding: 10px;
     //text-align: center;
-    width: 250px;
+    width: 300px;
     min-width: 200px;
   }
-  .input-small {
+  .input-number {
     width: 120px;
-    min-width: 100px;
-    padding: 0px 35px 0px;
+    min-width: 80px;
   }
 }
 mat-card-title {

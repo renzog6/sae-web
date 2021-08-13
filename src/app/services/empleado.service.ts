@@ -4,12 +4,13 @@ import { Observable, throwError } from "rxjs";
 import { retry, catchError, tap, map } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { Empleado, IEmpleado } from "../models/empleado.model";
-import { Direccion } from "../models/direccion.model";
-import { EmpleadoCategoria } from "../models/empleado-categoria.model";
-import { EmpleadoPuesto } from "../models/empleado-puesto.model";
-import { Genero } from "../models/genero.enum";
-import { Estado, EstadoCivil } from "../models/estado-civil.enum";
+import { Estado } from "../models/estado-civil.enum";
 import { Contacto } from "../models/contacto.model";
+import { Direccion } from "../models/ubicacion.direccion.model";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { ErrorHandlerService } from "./error-handler.service";
+import { coerceStringArray } from "@angular/cdk/coercion";
+
 
 @Injectable({
   providedIn: "root",
@@ -26,7 +27,9 @@ export class EmpleadoService {
     headers: this.headers,
   };
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(
+    private httpClient: HttpClient,
+  ) { }
 
   getList(): Observable<Empleado[]> {
     return this.httpClient
@@ -48,28 +51,51 @@ export class EmpleadoService {
   }
 
   create(data: IEmpleado): Observable<any> {
-    console.log('A-CREATE::::', this.dataToEmpleado(data));
     return this.httpClient.post(this.apiUrl + "/create", this.dataToEmpleado(data), this.httpOptions);
   }
 
   dataToEmpleado(data: IEmpleado): Empleado {
+    let contactos: Contacto[] = [];
+
+    if (data.cellPhone != undefined) {
+      let cox: Contacto = new Contacto;
+      cox.idContacto = -1;
+      cox.nombre = 'Personal';
+      cox.tipo = 'CELULAR'
+      cox.dato = data.cellPhone
+      cox.info = '';
+      contactos.push(cox);
+    }
+    if (data.cellPhone != undefined) {
+      let cox: Contacto = new Contacto;
+      cox.idContacto = -1;
+      cox.nombre = 'Personal';
+      cox.tipo = 'EMAIL'
+      cox.dato = data.email
+      cox.info = '';
+      contactos.push(cox);
+    }
+
     let emp = new Empleado();
-    emp.idPersona = -1,
-      emp.nombre = data.firstName,
-      emp.apellido = data.lastName,
-      emp.nacimiento = data.dateOfBirth,
-      emp.dni = data.dni,
-      emp.cuil = "",
-      emp.domicilio = new Direccion,
-      emp.contacto = new Contacto,
-      emp.categoria = data.category,
-      emp.puesto = data.position,
-      emp.genero = data.gender,
-      emp.estado = Estado.ACTIVO,
-      emp.estadoCivil = data.maritalStatus,
-      emp.info = data.info,
-      emp.fechaAlta = data.dateStart,
-      emp.fechaBaja = new Date
+    emp.idPersona = -1;
+    emp.nombre = data.firstName;
+    emp.apellido = data.lastName;
+    emp.nacimiento = data.dateOfBirth;
+    emp.dni = data.dni;
+    emp.cuil = "";
+    emp.domicilio = data.address;
+    emp.contactoList = contactos;
+    emp.categoria = data.category;
+    emp.puesto = data.position;
+    emp.genero = data.gender;
+    emp.estado = Estado.ACTIVO;
+    emp.estadoCivil = data.maritalStatus;
+    emp.info = data.info;
+    emp.fechaAlta = data.dateStart;
+    emp.fechaBaja = new Date;
+
+    console.log(JSON.stringify({ data: emp }, null, 4));
+
     return emp;
   }
 

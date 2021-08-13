@@ -21,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './layout/shared.module';
 import { NotFoundComponent } from './layout/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './layout/errors/server-error/server-error.component';
+import { UbicacionesModule } from './components/ubicaciones/ubicaciones.module';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { ServerErrorComponent } from './layout/errors/server-error/server-error.
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    UbicacionesModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: "es-AR" },

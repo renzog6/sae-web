@@ -1,5 +1,5 @@
 import { Contacto } from "./contacto.model";
-import { Direccion } from "./direccion.model";
+import { Direccion } from "./ubicacion.direccion.model";
 import { EmpleadoCategoria } from "./empleado-categoria.model";
 import { EmpleadoPuesto } from "./empleado-puesto.model";
 import { Estado, EstadoCivil } from "./estado-civil.enum";
@@ -18,23 +18,25 @@ export interface IEmpleado {
   category: EmpleadoCategoria;
   position: EmpleadoPuesto;
   info: string;
+  cellPhone: string;
+  email: string;
 };
 
 export class Empleado {
   idPersona!: number;
   nombre!: string;
-  apellido!: String;
+  apellido!: string;
   nacimiento!: Date;
-  dni!: String;
-  cuil!: String;
+  dni!: string;
+  cuil!: string;
   domicilio!: Direccion;
-  contacto!: Contacto;
+  contactoList!: Contacto[];
   categoria!: EmpleadoCategoria;
   puesto!: EmpleadoPuesto;
   genero!: Genero;
   estado!: Estado;
   estadoCivil!: EstadoCivil;
-  info!: String;
+  info!: string;
   fechaAlta!: Date;
   fechaBaja!: Date;
 
