@@ -1,0 +1,86 @@
+<div>
+  <section>
+    <div class="example-label">Empleados</div>
+    <div class="example-button-row">
+      <button
+        mat-stroked-button
+        color="primary"
+        [routerLink]="'create'"
+        routerLinkActive=""
+      >
+        Agregar
+      </button>
+      <button
+        mat-stroked-button
+        color="primary"
+        [routerLink]="'vacaciones'"
+        routerLinkActive=""
+      >
+        Exportar
+      </button>
+    </div>
+  </section>
+  <mat-divider class="separador"></mat-divider>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+      <td mat-cell *matCellDef="let vacacion">
+        {{ vacacion.fecha | date: "dd/MM/yyyy" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="detalle">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Detalle</th>
+      <td mat-cell *matCellDef="let vacacion">
+        {{ vacacion.detalle }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dias">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Dias</th>
+      <td mat-cell *matCellDef="let vacacion">
+        {{ vacacion.dias }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="anio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Año</th>
+      <td mat-cell *matCellDef="let vacacion">
+        {{ vacacion.anio }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaToma">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Inicia</th>
+      <td mat-cell *matCellDef="let vacacion">
+        {{ vacacion.fechaToma }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="info">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Info</th>
+      <td mat-cell *matCellDef="let vacacion">
+        {{ vacacion.info }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="accion">
+      <th mat-header-cell *matHeaderCellDef>Accion</th>
+      <td mat-cell *matCellDef="let vacacion">
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="printVacacion(vacacion)"
+        >
+          <mat-icon class="mat-18">print</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]">
+  </mat-paginator>
+</div>

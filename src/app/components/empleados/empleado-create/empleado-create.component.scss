@@ -22,3 +22,14 @@
 mat-card-title {
   text-align: center;
 }
+
+@media print {
+  header nav,
+  footer {
+    display: none;
+  }
+
+  button {
+    display: none;
+  }
+}

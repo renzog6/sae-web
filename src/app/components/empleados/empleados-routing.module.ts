@@ -10,8 +10,9 @@ const routes: Routes = [
     path: '', component: EmpleadosComponent,
     children: [
       { path: 'list', component: EmpleadoListComponent },
-      { path: 'details', component: EmpleadoDetailsComponent },
+      { path: 'details/:id', component: EmpleadoDetailsComponent },
       { path: 'create', component: EmpleadoCreateComponent },
+      { path: 'vacaciones', loadChildren: () => import('./empleado-vacaciones/empleado-vacaciones.module').then(m => m.EmpleadosVacaionesModule) },
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: '**', redirectTo: 'list', pathMatch: 'full' },
     ]

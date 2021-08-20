@@ -15,7 +15,7 @@ import { SharedModule } from 'src/app/layout/shared.module';
     EmpleadosComponent,
     EmpleadoListComponent,
     EmpleadoDetailsComponent,
-    EmpleadoCreateComponent
+    EmpleadoCreateComponent,
   ],
   imports: [
     CommonModule,

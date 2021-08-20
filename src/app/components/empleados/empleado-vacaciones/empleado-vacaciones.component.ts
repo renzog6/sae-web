@@ -1,31 +1,38 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { ComplexOuterSubscriber } from 'rxjs/internal/innerSubscribe';
 import { tap } from 'rxjs/operators';
 import { Empleado } from 'src/app/models/empleado.model';
+import { Vacacion } from 'src/app/models/vacacion.models';
 import { DateAuxService } from 'src/app/services/date-aux.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { VacacionService } from 'src/app/services/vacacion.services';
 
 @Component({
-  selector: 'app-empleado-list',
-  templateUrl: './empleado-list.component.html',
-  styleUrls: ['./empleado-list.component.scss']
+  selector: 'app-empleado-vacaciones',
+  templateUrl: './empleado-vacaciones.component.html',
+  styleUrls: ['./empleado-vacaciones.component.scss']
 })
-export class EmpleadoListComponent implements OnInit {
+export class EmpleadoVacacionesComponent implements OnInit {
 
-  columnas: string[] = ['apellido', 'dni', 'fechaAlta', 'antiguedad', 'puesto', 'categoria', 'details'];
+  columnas: string[] = ['apellido', 'fechaAlta', 'antiguedad', 'diasDisponibles', 'categoria', 'details'];
   dataSource = new MatTableDataSource<Empleado>();
+
+  empleadoSelect!: Empleado;
+  @Output() empleadoEvent = new EventEmitter<number>();
+  idEmpleado: number = -1;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private empleadoSvc: EmpleadoService,
-    private dateAuxSvc: DateAuxService,
     private vacacionSvc: VacacionService,
+    private dateAuxSvc: DateAuxService,
     private router: Router
   ) { }
 
@@ -46,13 +53,20 @@ export class EmpleadoListComponent implements OnInit {
     ).subscribe();
   }
 
-  redirectToDetails(id: number): void {
-    let url: string = `empleados/details/${id}`;
-    this.router.navigate([url]);
+  showVacaciones(empleado: Empleado): void {
+    console.log('ID::::', empleado.idPersona)
+    this.idEmpleado = empleado.idPersona;
+    //this.empleadoEvent.emit(empleado.idPersona)
   }
 
   getFullName(empleado: Empleado): string {
     return empleado.apellido + ' ' + empleado.nombre;
+  }
+
+  diasDisponibles(idEmpleado: number): number {
+    let dias: number = 0;
+    console.log('DIS:::', this.vacacionSvc.getDiasDisponibles(idEmpleado));
+    return dias;
   }
 
   calcAntiguedad(fecha: string): number {
@@ -63,5 +77,6 @@ export class EmpleadoListComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
 
 }

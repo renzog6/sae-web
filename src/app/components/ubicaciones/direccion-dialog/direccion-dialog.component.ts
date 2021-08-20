@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { delay, map, startWith, tap } from 'rxjs/operators';
 import { Direccion, IDireccion } from 'src/app/models/ubicacion.direccion.model';
 import { Localidad } from 'src/app/models/ubicacion.localidad.model';
-import { LocalidadService } from 'src/app/services/ubicacion.localidad.service';
+import { LocalidadService } from 'src/app/services/ubicacion.service';
+
 
 
 @Component({

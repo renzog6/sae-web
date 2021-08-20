@@ -41,41 +41,4 @@ export class Empleado {
   fechaBaja!: Date;
 
   constructor() { }
-
-  /*   setDatos(dto: any): void {
-    try {
-      this.idPersona = dto.idPersona;
-      this.nombre = dto.nombre;
-      this.apellido = dto.apellido;
-      this.dni = dto.dni;
-      this.cuil = dto.cuil;
-      this.nacimiento = new Date(dto.nacimiento);
-      this.domicilio = dto.domicilio;
-      this.genero = dto.genero;
-      this.estadoCivil = dto.estadoCivil;
-      this.categoria = dto.categoria;
-      this.puesto = dto.puesto;
-      this.fechaAlta = new Date(dto.fechaAlta);
-      this.fechaBaja = new Date(dto.fechaBaja);
-
-    } catch (error) {
-      console.error("Log error", error);
-    }
-  }
-
-  getAntiguedad(): number {
-    let edad: number = 0;
-    try {
-      const hoy = new Date();
-      edad = hoy.getFullYear() - this.fechaAlta.getFullYear();
-      const m = hoy.getMonth() - this.fechaAlta.getMonth();
-
-      if (m < 0 || (m === 0 && hoy.getDate() < this.fechaAlta.getDate())) {
-        edad--;
-      }
-    } catch (error) {
-      console.error("Log error", error);
-    }
-    return edad;
-  } */
 };

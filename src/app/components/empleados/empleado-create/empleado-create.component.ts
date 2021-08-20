@@ -36,8 +36,6 @@ export class EmpleadoCreateComponent implements OnInit, OnDestroy {
   address!: Direccion;
   addresShow!: string;
 
-  maskDNI = [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/];
-
   constructor(
     private location: Location,
     private empleadoSvc: EmpleadoService,
@@ -88,11 +86,11 @@ export class EmpleadoCreateComponent implements OnInit, OnDestroy {
 
   createEmppleado(empleadoValue: any): void {
     if (this.empleado.valid) {
-      this.executeOwnerCreation(empleadoValue);
+      this.executeCreation(empleadoValue);
     }
   }
 
-  private executeOwnerCreation(empleadoValue: any): void {
+  private executeCreation(empleadoValue: any): void {
 
     let empleado: IEmpleado = {
       firstName: empleadoValue.firstName,
