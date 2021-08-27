@@ -94,8 +94,6 @@ export class EmpleadoService {
     emp.fechaAlta = data.dateStart;
     emp.fechaBaja = new Date;
 
-    console.log(JSON.stringify({ data: emp }, null, 4));
-
     return emp;
   }
 

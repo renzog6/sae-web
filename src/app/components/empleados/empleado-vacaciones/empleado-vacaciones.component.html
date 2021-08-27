@@ -1,14 +1,25 @@
 <section class="container">
   <div fxFlex="48" class="container-table" fxFlex.xs="50">
-    <mat-form-field appearance="standard">
-      <mat-label>Buscar...</mat-label>
-      <input
-        matInput
-        (keyup)="applyFilter($event)"
-        placeholder="Ex. ium"
-        #input
-      />
-    </mat-form-field>
+    <div class="search-row">
+      <mat-form-field class="cl-input">
+        <mat-label>Buscar...</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Ex. ium"
+          #input
+        />
+      </mat-form-field>
+      <button
+        mat-stroked-button
+        color="primary"
+        [routerLink]="'exportExcel'"
+        routerLinkActive=""
+        (click)="exportVacacion()"
+      >
+        Exportar
+      </button>
+    </div>
 
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
       <ng-container matColumnDef="apellido">
@@ -62,7 +73,14 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-      <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: columnas"
+        (click)="onClickedRow(row)"
+        [ngClass]="{ selected: row === selectedRow }"
+      >
+        >
+      </tr>
     </table>
 
     <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]">

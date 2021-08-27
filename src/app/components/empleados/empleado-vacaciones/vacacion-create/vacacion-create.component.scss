@@ -1,0 +1,28 @@
+.form {
+  min-width: 350px;
+  margin-top: 5px;
+  .items {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+  }
+  mat-form-field {
+    margin: auto;
+    padding: 10px;
+    //text-align: center;
+    width: 300px;
+    min-width: 200px;
+    justify-content: center;
+  }
+  .input-number {
+    width: 120px;
+    min-width: 80px;
+  }
+  .input-small {
+    width: 120px;
+    min-width: 80px;
+  }
+}
+mat-card-title {
+  text-align: center;
+}

@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { delay, map, startWith, tap } from 'rxjs/operators';
-import { Direccion, IDireccion } from 'src/app/models/ubicacion.direccion.model';
+import { map, startWith, tap } from 'rxjs/operators';
+import { Direccion } from 'src/app/models/ubicacion.direccion.model';
 import { Localidad } from 'src/app/models/ubicacion.localidad.model';
 import { LocalidadService } from 'src/app/services/ubicacion.service';
 

@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { interval, Observable, throwError } from "rxjs";
-import { retry, catchError, tap, map, first } from "rxjs/operators";
+import { retry, catchError, tap, map, first, filter } from "rxjs/operators";
 import { environment } from "src/environments/environment";
-import { Vacacion } from "../models/vacacion.models";
+import { IDiasDisponibles, Vacacion } from "../models/vacacion.models";
 
 
 @Injectable({
@@ -22,8 +22,8 @@ export class VacacionService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getListVacacion(idEmpleado: any): Observable<Vacacion[]> {
-    let API_URL = `${this.apiUrl}/${idEmpleado}`;
+  getListByEmpleado(idEmpleado: any): Observable<Vacacion[]> {
+    let API_URL = `${this.apiUrl}/${idEmpleado}/list`;
     return this.httpClient
       .get<Vacacion[]>(API_URL, this.httpOptions)
       .pipe(
@@ -32,29 +32,75 @@ export class VacacionService {
       );
   }
 
-  /*   getDiasDisponibles(idEmpleado: any): Observable<number> {
-      let API_URL = `${this.apiUrl}/${idEmpleado}/dias`;
-      return this.httpClient
-        .get<number>(API_URL, this.httpOptions)
-        .pipe(
-          retry(1),
-          catchError(this.handleError)
-        );
-    } */
 
-  getDiasDisponibles(idEmpleado: number): number {
-    let API_URL = `${this.apiUrl}/${idEmpleado}/dias`;
-    let dias: number = 0;
-    this.httpClient
-      .get<number>(API_URL, this.httpOptions)
+  getDiasDisponibles(): Observable<IDiasDisponibles[]> {
+    let API_URL = `${this.apiUrl}/diasDisponibles`;
+    return this.httpClient
+      .get<IDiasDisponibles[]>(API_URL, this.httpOptions)
       .pipe(
-        tap(res => console.log('XXXXXXXXX:::', res)),
         retry(1),
         catchError(this.handleError)
       );
+  }
 
-    console.log('OBS::::::::', dias)
-    return dias;
+  create(idEmpleado: number, data: Vacacion): Observable<any> {
+    let API_URL = `${this.apiUrl}/${idEmpleado}/create`;
+    return this.httpClient.post(API_URL, this.dataTo(data), this.httpOptions);
+  }
+
+  dataTo(data: Vacacion): Vacacion {
+    let vaca = new Vacacion();
+    vaca.idVacacion = -1;
+    vaca.fecha = data.fecha;
+    vaca.detalle = data.detalle;
+    vaca.dias = data.dias;
+    vaca.anio = data.anio;
+    vaca.fechaToma = data.fechaToma;
+    vaca.info = data.info;
+    let d = new Date;
+    d.getTimezoneOffset
+    vaca.fechaLiquida = new Date;
+    vaca.created = new Date;
+    vaca.updated = new Date;
+
+    return vaca;
+  }
+
+  get(id: any): Observable<Vacacion> {
+    let API_URL = `${this.apiUrl}/${id}`;
+    return this.httpClient
+      .get<Vacacion>(API_URL, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.handleError)
+      );
+  }
+
+  delete(id: any): Observable<Vacacion> {
+    let API_URL = `${this.apiUrl}/delete/${id}`;
+    return this.httpClient
+      .delete<Vacacion>(API_URL, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.handleError)
+      );
+  }
+
+  /*
+    download(idEmpleado: any): Observable<Blob> {
+      let API_URL = `${this.apiUrl}/download/${idEmpleado}`;
+      return this.httpClient.get(API_URL, {
+        responseType: 'blob'
+      });
+    } */
+
+  download(idEmpleado: any): Observable<HttpEvent<Blob>> {
+    let API_URL = `${this.apiUrl}/download/${idEmpleado}`;
+    return this.httpClient.get(API_URL, {
+      reportProgress: true,
+      observe: 'events',
+      responseType: 'blob'
+    });
   }
 
   handleError(error: any) {
@@ -70,8 +116,5 @@ export class VacacionService {
     return throwError(errorMessage);
   }
 
-}
-function value(value: any): (value: number) => void {
-  throw new Error("Function not implemented.");
 }
 

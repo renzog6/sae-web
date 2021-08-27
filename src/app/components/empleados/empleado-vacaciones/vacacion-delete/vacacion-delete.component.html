@@ -1,0 +1,31 @@
+<section fxLayout="row wrap" fxLayoutAlign="center center">
+  <mat-card fxFlex="500px" fxFlex.xs="100%">
+    <mat-card-title>Delete Vacacion</mat-card-title>
+    <mat-card-content>
+      <div fxLayout="column wrap" fxLayoutGap="40px">
+        <div fxLayout="row wrap" fxFlex>
+          <div fxFlex><strong>Vacacion Detalle:</strong></div>
+          <div fxFlex>{{ vacacion?.detalle }}</div>
+        </div>
+
+        <div fxLayout="row wrap" fxFlex>
+          <div fxFlex><strong>Fecha:</strong></div>
+          <div fxFlex>{{ vacacion?.fecha | date }}</div>
+        </div>
+
+        <div fxLayout="row wrap" fxFlex>
+          <div fxFlex><strong>Dias:</strong></div>
+          <div fxFlex>{{ vacacion?.dias }}</div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="deleteVacacion()">
+        Delete
+      </button>
+      <button type="button" mat-raised-button color="warn" (click)="onCancel()">
+        Cancel
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</section>

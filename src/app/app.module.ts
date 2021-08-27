@@ -45,7 +45,10 @@ import { UbicacionesModule } from './components/ubicaciones/ubicaciones.module';
     UbicacionesModule,
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: "es-AR" },
+    {
+      provide: LOCALE_ID, useValue: "es-AR",
+
+    },
 
   ],
   bootstrap: [AppComponent]

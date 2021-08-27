@@ -8,13 +8,15 @@ import { EmpleadoVacacionesComponent } from './empleado-vacaciones.component';
 import { VacacionListComponent } from './vacacion-list/vacacion-list.component';
 import { VacacionCreateComponent } from './vacacion-create/vacacion-create.component';
 import { MaterialModule } from 'src/app/material.module';
-
+import { SumPipeModule } from './sum.pipe';
+import { VacacionDeleteComponent } from './vacacion-delete/vacacion-delete.component';
 
 @NgModule({
   declarations: [
     EmpleadoVacacionesComponent,
     VacacionListComponent,
-    VacacionCreateComponent
+    VacacionCreateComponent,
+    VacacionDeleteComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,9 @@ import { MaterialModule } from 'src/app/material.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    MaterialModule
-  ]
+    MaterialModule,
+    SumPipeModule
+  ],
+  providers: [SumPipeModule]
 })
 export class EmpleadosVacaionesModule { }

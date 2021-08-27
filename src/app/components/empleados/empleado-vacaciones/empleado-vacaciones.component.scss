@@ -21,6 +21,64 @@ table {
   width: 100%;
 }
 
+.mat-header-cell {
+  flex-direction: column;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mat-column-antiguedad,
+.mat-column-diasDisponibles,
+.mat-column-fechaAlta,
+.mat-column-details {
+  text-align: center;
+  justify-content: center;
+}
+
 tr.mat-row:hover {
   background-color: rgb(179, 243, 179);
+}
+
+.mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-row:hover .mat-cell {
+  border-color: currentColor;
+}
+
+.selected {
+  background-color: rgba(241, 240, 240, 0.87) !important;
+  font-weight: bold !important;
+}
+
+.mat-row:nth-child(even) {
+  background-color: #e4f0ec;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.search-row {
+  width: 100%;
+  display: flex; /* or inline-flex */
+  flex-flow: row wrap;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  .cl-input {
+    width: 50%;
+  }
+
+  .mat-button-base {
+    margin: 8px 8px 8px 8px;
+  }
+  button {
+    width: 85px;
+    height: 36px;
+    background-color: rgb(151, 204, 151);
+  }
 }

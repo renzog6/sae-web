@@ -5,14 +5,14 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SuccessDialogComponent } from 'src/app/layout/dialogs/success-dialog/success-dialog.component';
-import { Empleado, IEmpleado } from 'src/app/models/empleado.model';
+import { IEmpleado } from 'src/app/models/empleado.model';
 import { Genero } from 'src/app/models/genero.enum';
 import { EstadoCivil } from 'src/app/models/estado-civil.enum';
 import { EmpleadoCategoriaService } from 'src/app/services/empleado-categoria.service';
 import { EmpleadoPuestoService } from 'src/app/services/empleado-puesto.service';
 import { EmpleadoCategoria } from 'src/app/models/empleado-categoria.model';
 import { EmpleadoPuesto } from 'src/app/models/empleado-puesto.model';
-import { Direccion, IDireccion } from 'src/app/models/ubicacion.direccion.model';
+import { Direccion } from 'src/app/models/ubicacion.direccion.model';
 import { DireccionDialogComponent } from '../../ubicaciones/direccion-dialog/direccion-dialog.component';
 
 
