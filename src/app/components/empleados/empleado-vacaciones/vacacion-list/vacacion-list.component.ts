@@ -80,6 +80,17 @@ export class VacacionListComponent implements OnInit {
 
   printVacacion(vaca: Vacacion): void {
 
+    this.vacacionSvc.downloadPDF(vaca.idVacacion).subscribe(
+      (httpEvent: HttpEvent<Blob>) => {
+        if (httpEvent.type === 4) {
+          saveAs(new File([httpEvent.body!], httpEvent.headers.get('File-Name')!,
+            { type: `${httpEvent.headers.get('Content-Type')};charset=utf-8` }));
+        }
+      },
+      (error: HttpErrorResponse) => {
+        console.log('ERROR::: ', error);
+      },
+    );
   }
 
   exportVacacion(): void {

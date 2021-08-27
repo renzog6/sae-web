@@ -103,6 +103,15 @@ export class VacacionService {
     });
   }
 
+  downloadPDF(id: any): Observable<HttpEvent<Blob>> {
+    let API_URL = `${this.apiUrl}/downloadPDF/${id}`;
+    return this.httpClient.get(API_URL, {
+      reportProgress: true,
+      observe: 'events',
+      responseType: 'blob'
+    });
+  }
+
   handleError(error: any) {
     let errorMessage = "";
     if (error.error instanceof ErrorEvent) {
