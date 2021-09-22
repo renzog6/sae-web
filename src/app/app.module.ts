@@ -22,6 +22,8 @@ import { SharedModule } from './layout/shared.module';
 import { NotFoundComponent } from './layout/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './layout/errors/server-error/server-error.component';
 import { UbicacionesModule } from './components/ubicaciones/ubicaciones.module';
+import { LoginComponent } from './layout/login/login.component';
+import { ProfileComponent } from './layout/profile/profile.component';
 
 
 @NgModule({
@@ -31,6 +33,8 @@ import { UbicacionesModule } from './components/ubicaciones/ubicaciones.module';
     HomeComponent,
     HeaderComponent,
     SidenavComponent,
+    LoginComponent,
+    ProfileComponent,
     NotFoundComponent,
     ServerErrorComponent,
   ],

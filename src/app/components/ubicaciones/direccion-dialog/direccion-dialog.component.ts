@@ -7,8 +7,6 @@ import { Direccion } from 'src/app/models/ubicacion.direccion.model';
 import { Localidad } from 'src/app/models/ubicacion.localidad.model';
 import { LocalidadService } from 'src/app/services/ubicacion.service';
 
-
-
 @Component({
   selector: 'app-direccion-dialog',
   templateUrl: './direccion-dialog.component.html',
@@ -36,9 +34,6 @@ export class DireccionDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCitys();
-
-    console.log('ngOnInit', this.direccion.localidad);
-
 
     this.formAddress = this.formBuilder.group({
       street: new FormControl(this.direccion.calle, [Validators.required, Validators.maxLength(20)]),

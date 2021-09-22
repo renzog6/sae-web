@@ -1,3 +1,262 @@
-<p>empleado-details works!</p>
+<section fxLayout="row wrap" fxLayoutAlign="center center">
+  <mat-card fxFlex="90%" fxFlex.xs="100%" class="formEmpleado">
+    <mat-card-title>Editar Empleado</mat-card-title>
 
-{{ empleadoSelect | json }}
+    <ng-template #loading>
+      <mat-spinner></mat-spinner>
+    </ng-template>
+
+    <form
+      *ngIf="isLoader | async as empleadoSelect; else loading"
+      [formGroup]="empleadoForm"
+      autocomplete="off"
+      novalidate
+      fxLayout="column wrap"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+    >
+      <mat-card-content>
+        <mat-divider></mat-divider>
+        <h2>Datos Personales</h2>
+        <div class="items">
+          <!-- Nombre -->
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="Nombre/s"
+              formControlName="firstName"
+              id="firstName"
+            />
+            <mat-hint align="end">No mas de 20 caracteres</mat-hint>
+            <mat-error *ngIf="hasError('firstName', 'required')"
+              >Name is required</mat-error
+            >
+            <mat-error *ngIf="hasError('firstName', 'maxlength')"
+              >No mas de 20 caracteres</mat-error
+            >
+          </mat-form-field>
+          <!-- Apellido -->
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="Apellido/s"
+              formControlName="lastName"
+              id="lastName"
+            />
+            <mat-hint align="end">No mas de 20 caracteres.</mat-hint>
+            <mat-error *ngIf="hasError('lastName', 'required')"
+              >Name is required</mat-error
+            >
+            <mat-error *ngIf="hasError('lastName', 'maxlength')"
+              >No mas de 20 caracteres</mat-error
+            >
+          </mat-form-field>
+          <!-- Nacimiento -->
+          <mat-form-field class="input-small">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              placeholder="Fecha Nacimiento"
+              formControlName="dateOfBirth"
+              id="dateOfBirth"
+              readonly
+              (click)="picker.open()"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <!-- Genero -->
+          <mat-form-field class="input-small">
+            <mat-label>Genero</mat-label>
+            <mat-select formControlName="gender" id="gender" required>
+              <mat-option>--</mat-option>
+              <mat-option *ngFor="let g of genders" [value]="g">
+                {{ g }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('gender', 'required')"
+              >Seleccionar uno.</mat-error
+            >
+          </mat-form-field>
+          <!-- DNI -->
+          <mat-form-field class="input-small">
+            <input
+              matInput
+              mask="00.000.000"
+              placeholder="D.N.I"
+              formControlName="dni"
+            />
+            <mat-hint align="end">Sin puntos.</mat-hint>
+            <mat-error *ngIf="hasError('dni', 'required')"
+              >Address is required</mat-error
+            >
+          </mat-form-field>
+          <!-- Estado Civil -->
+          <mat-form-field class="input-small">
+            <mat-label>Estado Civil</mat-label>
+            <mat-select
+              formControlName="maritalStatus"
+              id="maritalStatus"
+              required
+            >
+              <mat-option>--</mat-option>
+              <mat-option *ngFor="let ms of maritalStatuss" [value]="ms">
+                {{ ms }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('maritalStatus', 'required')"
+              >Seleccionar uno.</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <mat-divider></mat-divider>
+        <h3>Contacto</h3>
+        <div class="items">
+          <!-- Direccion -->
+          <mat-form-field>
+            <mat-label>Direccion</mat-label>
+            <input matInput value="{{ addresShow }}" disabled />
+            <button
+              mat-button
+              matSuffix
+              mat-stroked-button
+              aria-label="search"
+              (click)="openDireccionDialog()"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-form-field>
+          <!-- Celular -->
+          <mat-form-field>
+            <mat-label>Celular</mat-label>
+            <input
+              matInput
+              mask="0000-000 000"
+              placeholder="Numero Celular"
+              formControlName="cellPhone"
+            />
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-hint>1234-123456</mat-hint>
+          </mat-form-field>
+          <!-- Email-->
+          <mat-form-field>
+            <mat-label>email</mat-label>
+            <input
+              type="email"
+              matInput
+              placeholder="pat@example.com"
+              formControlName="email"
+            />
+            <mat-error *ngIf="hasError('email', 'email')"
+              >email incorrecto.</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <mat-divider></mat-divider>
+        <h2>Datos Laborales</h2>
+        <div class="items">
+          <!-- Fecha Alta -->
+          <mat-form-field class="input-small">
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              placeholder="Fecha de Alta"
+              formControlName="dateStart"
+              id="dateStart"
+              readonly
+              (click)="picker.open()"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+          <!-- CUIL -->
+          <mat-form-field class="input-small">
+            <input
+              matInput
+              mask="00-00000000-0"
+              placeholder="C.U.I.L"
+              formControlName="cuil"
+              id="cuil"
+            />
+            <mat-hint align="end">Sin guiones</mat-hint>
+            <mat-error *ngIf="hasError('cuil', 'maxlength')">Error</mat-error>
+          </mat-form-field>
+          <!-- Categoria -->
+          <mat-form-field>
+            <mat-label>Categoria</mat-label>
+            <mat-select
+              formControlName="category"
+              id="category"
+              required
+              [compareWith]="compareObjects"
+            >
+              <mat-option *ngFor="let cat of categorys" [value]="cat">
+                {{ cat.nombre }} ( {{ cat.info }} )
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('category', 'required')"
+              >Seleccionar uno.</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Puesto</mat-label>
+            <mat-select
+              formControlName="position"
+              id="position"
+              required
+              [compareWith]="compareObjects"
+            >
+              <mat-option *ngFor="let pos of positions" [value]="pos">
+                {{ pos.nombre }} ( {{ pos.info }} )
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('maritalStatus', 'required')"
+              >Seleccionar uno.</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput type="text" placeholder="Info" id="info" />
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-divider></mat-divider>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!empleadoForm.valid"
+          (click)="updateEmppleado(empleadoForm.value)"
+        >
+          Actualizar
+        </button>
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="onCancel()"
+        >
+          Cancelar
+        </button>
+        <mat-divider></mat-divider>
+        <button
+          type="button"
+          mat-raised-button
+          color="accent"
+          (click)="openDeleteDialog()"
+        >
+          Dar de Baja
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</section>

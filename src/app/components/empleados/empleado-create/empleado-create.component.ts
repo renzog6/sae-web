@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Location } from '@angular/common';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -14,6 +13,8 @@ import { EmpleadoCategoria } from 'src/app/models/empleado-categoria.model';
 import { EmpleadoPuesto } from 'src/app/models/empleado-puesto.model';
 import { Direccion } from 'src/app/models/ubicacion.direccion.model';
 import { DireccionDialogComponent } from '../../ubicaciones/direccion-dialog/direccion-dialog.component';
+import { Router } from '@angular/router';
+import { LocalidadService } from 'src/app/services/ubicacion.service';
 
 
 
@@ -37,19 +38,19 @@ export class EmpleadoCreateComponent implements OnInit, OnDestroy {
   addresShow!: string;
 
   constructor(
-    private location: Location,
+    private router: Router,
     private empleadoSvc: EmpleadoService,
     private categoriaSvc: EmpleadoCategoriaService,
     private puestoSvc: EmpleadoPuestoService,
     private dialog: MatDialog,
     private errorSvc: ErrorHandlerService,
+    private localidadSvc: LocalidadService
   ) { }
 
   ngOnInit() {
     this.loadCategorys();
     this.loadPositions();
-    this.address = new Direccion;
-    this.addresShow = 'Editar direccion';
+    this.createDireccion();
 
     this.empleado = new FormGroup({
       firstName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
@@ -81,7 +82,7 @@ export class EmpleadoCreateComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.location.back();
+    this.router.navigate(['/empleados'])
   }
 
   createEmppleado(empleadoValue: any): void {
@@ -116,7 +117,7 @@ export class EmpleadoCreateComponent implements OnInit, OnDestroy {
           //we are subscribing on the [mat-dialog-close] attribute as soon as we click on the dialog button
           dialogRef.afterClosed()
             .subscribe(result => {
-              this.location.back();
+              this.router.navigate(['/empleados'])
             });
         },
         (error => {
@@ -124,6 +125,16 @@ export class EmpleadoCreateComponent implements OnInit, OnDestroy {
           this.errorSvc.handleError(error);
         })
       )
+  }
+
+  createDireccion(): void {
+    this.addresShow = 'Editar direccion';
+    this.address = new Direccion;
+    this.address.calle = "sin"
+    this.address.numero = "0";
+    this.localidadSvc.get(1).subscribe(
+      res => this.address.localidad = res
+    );
   }
 
   openDireccionDialog(): void {

@@ -66,6 +66,19 @@
     <tr mat-row matRipple *matRowDef="let row; columns: columnas"></tr>
   </table>
 
+  <div
+    *ngIf="isLoading"
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+    "
+  >
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+
   <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]">
   </mat-paginator>
 </section>

@@ -14,10 +14,12 @@ import { EmpresaService } from 'src/app/services/empresa.service';
 })
 export class EmpresaListComponent implements OnInit, AfterViewInit {
 
+  isLoading: boolean = true;
+
   columnas: string[] = ['idEmpresa', 'nombre', 'cuit', 'test', 'details'];
   empresas!: Empresa[];
   //dataSource = new MatTableDataSource(this.empresas);
-  // dataSource!: MatTableDataSource<Empresa>();
+  //dataSource!: MatTableDataSource<Empresa>();
 
   dataSource = new MatTableDataSource<Empresa>();
 
@@ -38,11 +40,14 @@ export class EmpresaListComponent implements OnInit, AfterViewInit {
   }
 
   private loadEmpresas(): void {
-    this.empresaSvc.getList().pipe(
-      tap(
-        (res: Empresa[]) => (this.dataSource.data = res)
-      )
-    ).subscribe();
+    this.empresaSvc.getList()
+      .subscribe(
+        (res: Empresa[]) => {
+          this.dataSource.data = res,
+            this.isLoading = false
+        },
+        error => this.isLoading = false
+      );
   }
 
   redirectToDetails(id: number): void {

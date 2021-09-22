@@ -6,11 +6,6 @@ import { environment } from "src/environments/environment";
 import { Empleado, IEmpleado } from "../models/empleado.model";
 import { Estado } from "../models/estado-civil.enum";
 import { Contacto } from "../models/contacto.model";
-import { Direccion } from "../models/ubicacion.direccion.model";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { ErrorHandlerService } from "./error-handler.service";
-import { coerceStringArray } from "@angular/cdk/coercion";
-
 
 @Injectable({
   providedIn: "root",
@@ -23,7 +18,7 @@ export class EmpleadoService {
     .set("Content-Type", "application/json")
     .set("Accept", "application/json");
 
-  httpOptions = {
+  private httpOptions = {
     headers: this.headers,
   };
 
@@ -57,24 +52,29 @@ export class EmpleadoService {
   dataToEmpleado(data: IEmpleado): Empleado {
     let contactos: Contacto[] = [];
 
+    let cox: Contacto = new Contacto;
+    cox.nombre = 'Personal';
+    cox.tipo = 'CELULAR'
     if (data.cellPhone != undefined) {
-      let cox: Contacto = new Contacto;
-      cox.idContacto = -1;
-      cox.nombre = 'Personal';
-      cox.tipo = 'CELULAR'
       cox.dato = data.cellPhone
       cox.info = '';
-      contactos.push(cox);
+    } else {
+      cox.dato = '0'
+      cox.info = '';
     }
-    if (data.cellPhone != undefined) {
-      let cox: Contacto = new Contacto;
-      cox.idContacto = -1;
-      cox.nombre = 'Personal';
-      cox.tipo = 'EMAIL'
+    contactos.push(cox);
+
+    cox = new Contacto;
+    cox.nombre = 'Personal';
+    cox.tipo = 'EMAIL';
+    if (data.email != undefined) {
       cox.dato = data.email
       cox.info = '';
-      contactos.push(cox);
+    } else {
+      cox.dato = 'sin-mail@mail.com';
+      cox.info = '';
     }
+    contactos.push(cox);
 
     let emp = new Empleado();
     emp.idPersona = -1;
@@ -82,7 +82,7 @@ export class EmpleadoService {
     emp.apellido = data.lastName;
     emp.nacimiento = data.dateOfBirth;
     emp.dni = data.dni;
-    emp.cuil = "";
+    emp.cuil = data.cuil;
     emp.domicilio = data.address;
     emp.contactoList = contactos;
     emp.categoria = data.category;
@@ -97,8 +97,12 @@ export class EmpleadoService {
     return emp;
   }
 
-  update(id: any, data: any): Observable<any> {
-    return this.httpClient.put(`${this.apiUrl}/update/${id}`, data);
+  update(id: any, data: IEmpleado): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}/update/${id}`, this.dataToEmpleado(data), this.httpOptions);
+  }
+
+  darBaja(data: Empleado): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}/darBaja`, data, this.httpOptions);
   }
 
   delete(id: any): Observable<any> {

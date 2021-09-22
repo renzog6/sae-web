@@ -4,7 +4,7 @@ import { Observable, throwError } from "rxjs";
 import { retry, catchError, tap, map } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { Localidad } from "../models/ubicacion.localidad.model";
-import { IDireccion } from "../models/ubicacion.direccion.model";
+import { Direccion, IDireccion } from "../models/ubicacion.direccion.model";
 
 @Injectable({
   providedIn: "root",
@@ -32,6 +32,15 @@ export class LocalidadService {
       );
   }
 
+  get(id: any): Observable<Localidad> {
+    return this.httpClient
+      .get<Localidad>(`${this.apiUrl}/localidad/${id}`, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.handleError)
+      );
+  }
+
   handleError(error: any) {
     let errorMessage = "";
     if (error.error instanceof ErrorEvent) {
@@ -45,8 +54,6 @@ export class LocalidadService {
     return throwError(errorMessage);
   }
 }
-
-
 
 @Injectable({
   providedIn: "root",
@@ -72,6 +79,10 @@ export class DireccionService {
         retry(1),
         catchError(this.handleError)
       );
+  }
+
+  update(id: any, data: Direccion): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}/direccion/update/${id}`, data, this.httpOptions);
   }
 
   handleError(error: any) {

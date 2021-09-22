@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" class="expanded-toolbar">
   <div>
     <button mat-icon-button (click)="onToggleSidenav()">
       <mat-icon>menu</mat-icon>
@@ -7,14 +7,39 @@
   <div>
     <a routerLink="/home">SAE Web</a>
   </div>
-  <div fxFlex fxLayout fxLayoutAlign="center" fxHide.xs>
-    <ul fxLayout fxLayoutGap="15px" class="navigation-items">
-      <li>
-        <a routerLink="/empresas">Empresas</a>
-      </li>
-      <li>
-        <a routerLink="/empleados">Empleados</a>
-      </li>
-    </ul>
+  <div fxFlex fxLayout fxLayoutAlign="center" fxHide.xs *ngIf="isLoggedIn">
+    <button mat-button routerLink="/empresas">Empresas</button>
+    <button mat-button routerLink="/empleados">Empleados</button>
   </div>
+  <div fxLayout="row" fxShow="false" fxShow.gt-sm>
+    <button mat-button routerLink="/profile" *ngIf="isLoggedIn">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <button mat-button routerLink="/login" *ngIf="!isLoggedIn">
+      <mat-icon>power_settings_new</mat-icon>
+      Login
+    </button>
+    <button mat-button *ngIf="isLoggedIn" (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      Logout
+    </button>
+  </div>
+  <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
+    <mat-icon>menu</mat-icon>
+  </button>
 </mat-toolbar>
+
+<mat-menu x-position="before" #menu="matMenu">
+  <button mat-menu-item routerLink="/">
+    <mat-icon>home</mat-icon>
+    Home
+  </button>
+  <button mat-menu-item routerLink="/login" *ngIf="!isLoggedIn">
+    <mat-icon>power_settings_new</mat-icon>
+    Login
+  </button>
+  <button mat-menu-item *ngIf="isLoggedIn" (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    Logout
+  </button>
+</mat-menu>

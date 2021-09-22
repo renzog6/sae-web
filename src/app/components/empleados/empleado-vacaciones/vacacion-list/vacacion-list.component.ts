@@ -28,7 +28,6 @@ export class VacacionListComponent implements OnInit {
 
   @Input() idEmpleado!: number;
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     this.loadVacaciones(changes.idEmpleado.currentValue);
   }
 
@@ -39,7 +38,6 @@ export class VacacionListComponent implements OnInit {
   dataSource = new MatTableDataSource<Vacacion>();
 
   constructor(
-    private location: Location,
     private vacacionSvc: VacacionService,
     private dialog: MatDialog,
     private errorSvc: ErrorHandlerService,
@@ -65,7 +63,6 @@ export class VacacionListComponent implements OnInit {
     if (id != -1) {
       this.dataSource.data = [];
       this.vacacionSvc.getListByEmpleado(id).pipe(
-        tap(res => console.log(res)),
         tap((res: Vacacion[]) => (this.dataSource.data = res)),
         tap((res: Vacacion[]) => (this.totalDias = res.map(t => t.dias).reduce((acc, value) => acc + value, 0))),
       ).subscribe();
@@ -110,7 +107,6 @@ export class VacacionListComponent implements OnInit {
   deleteVacacion(vaca: Vacacion): void {
 
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
 
@@ -150,7 +146,9 @@ export class VacacionListComponent implements OnInit {
                 //we are subscribing on the [mat-dialog-close] attribute as soon as we click on the dialog button
                 dialogRef.afterClosed()
                   .subscribe(result => {
-                    this.router.navigate(['/empleados/vacaciones']),
+                    this.router.navigate(['/empleados/vacaciones']).then(() => {
+                      window.location.reload()
+                    }),
                       this.loadVacaciones(this.idEmpleado)
                   });
               },

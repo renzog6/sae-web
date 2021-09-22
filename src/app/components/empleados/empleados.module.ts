@@ -8,6 +8,7 @@ import { EmpleadoDetailsComponent } from './empleado-details/empleado-details.co
 import { EmpleadoCreateComponent } from './empleado-create/empleado-create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/layout/shared.module';
+import { EmpleadoDeleteComponent } from './empleado-delete/empleado-delete.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { SharedModule } from 'src/app/layout/shared.module';
     EmpleadoListComponent,
     EmpleadoDetailsComponent,
     EmpleadoCreateComponent,
+    EmpleadoDeleteComponent,
   ],
   imports: [
     CommonModule,

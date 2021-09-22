@@ -1,5 +1,3 @@
-
-
 export class Contacto {
   idContacto!: number;
   nombre!: string;

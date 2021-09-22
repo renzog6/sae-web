@@ -16,6 +16,8 @@ import { VacacionService } from 'src/app/services/vacacion.services';
 })
 export class EmpleadoListComponent implements OnInit {
 
+  isLoading: boolean = true;
+
   columnas: string[] = ['apellido', 'dni', 'fechaAlta', 'antiguedad', 'puesto', 'categoria', 'details'];
   dataSource = new MatTableDataSource<Empleado>();
 
@@ -25,7 +27,6 @@ export class EmpleadoListComponent implements OnInit {
   constructor(
     private empleadoSvc: EmpleadoService,
     private dateAuxSvc: DateAuxService,
-    private vacacionSvc: VacacionService,
     private router: Router
   ) { }
 
@@ -39,11 +40,13 @@ export class EmpleadoListComponent implements OnInit {
   }
 
   private loadEmpleados(): void {
-    this.empleadoSvc.getList().pipe(
-      tap(
-        (res: Empleado[]) => (this.dataSource.data = res)
-      )
-    ).subscribe();
+    this.empleadoSvc.getList().subscribe(
+      (res: Empleado[]) => {
+        this.dataSource.data = res,
+          this.isLoading = false
+      },
+      error => this.isLoading = false
+    );
   }
 
   redirectToDetails(id: number): void {
