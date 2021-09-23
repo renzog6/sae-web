@@ -3,10 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { tap } from 'rxjs/operators';
 import { Empresa } from 'src/app/models/empresa.model';
 import { EmpresaService } from 'src/app/services/empresa.service';
-
 @Component({
   selector: 'app-empresa-list',
   templateUrl: './empresa-list.component.html',
@@ -18,8 +16,6 @@ export class EmpresaListComponent implements OnInit, AfterViewInit {
 
   columnas: string[] = ['idEmpresa', 'nombre', 'cuit', 'test', 'details'];
   empresas!: Empresa[];
-  //dataSource = new MatTableDataSource(this.empresas);
-  //dataSource!: MatTableDataSource<Empresa>();
 
   dataSource = new MatTableDataSource<Empresa>();
 

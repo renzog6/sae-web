@@ -14,8 +14,24 @@
         <mat-divider></mat-divider>
 
         <div class="items">
+          <!-- Detalle -->
+          <mat-form-field>
+            <mat-label>Detalle</mat-label>
+            <mat-select
+              [(value)]="selectedDetailVacation"
+              formControlName="detalle"
+              id="detalle"
+            >
+              <mat-option
+                [value]="option"
+                *ngFor="let option of detailVacacion"
+                (click)="onChange()"
+                >{{ option.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
           <!-- Fecha -->
-          <mat-form-field class="input-small">
+          <mat-form-field class="input-small" *ngIf="!isNuevaVacaccion">
             <input
               matInput
               [matDatepicker]="pickerFecha"
@@ -31,38 +47,7 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #pickerFecha></mat-datepicker>
           </mat-form-field>
-          <!-- Detalle -->
-          <mat-form-field>
-            <mat-label>Detalle</mat-label>
-            <mat-select
-              [(value)]="selectedDetailVacation"
-              formControlName="detalle"
-              id="detalle"
-            >
-              <mat-option></mat-option>
-              <mat-option
-                [value]="option"
-                *ngFor="let option of detailVacacion"
-                >{{ option.name }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-          <!--           <mat-form-field>
-            <input
-              matInput
-              type="text"
-              placeholder="Detalle"
-              formControlName="detalle"
-              id="detalle"
-            />
-            <mat-hint align="end">No mas de 20 caracteres</mat-hint>
-            <mat-error *ngIf="hasError('detalle', 'required')"
-              >Name is required</mat-error
-            >
-            <mat-error *ngIf="hasError('detalle', 'maxlength')"
-              >No mas de 20 caracteres</mat-error
-            >
-          </mat-form-field> -->
+
           <!-- Dias -->
           <mat-form-field class="input-number">
             <input
@@ -94,7 +79,7 @@
             >
           </mat-form-field>
           <!-- Fecha Toma-->
-          <mat-form-field class="input-small">
+          <mat-form-field class="input-small" *ngIf="!isNuevaVacaccion">
             <input
               matInput
               [matDatepicker]="pickerFechaToma"

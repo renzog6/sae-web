@@ -15,7 +15,7 @@ export class VacacionCreateComponent implements OnInit {
   form!: FormGroup;
   vacacion!: Vacacion;
   isDataAvailable: boolean = false;
-
+  isNuevaVacaccion: boolean = false;
 
   detailVacacion: IDetailVacation[] = [
     { name: 'Toma Vacaciones', value: -1 },
@@ -52,19 +52,40 @@ export class VacacionCreateComponent implements OnInit {
 
   private executeCreation(vacacionValue: any): void {
     let vaca = new Vacacion();
-    vaca.fecha = vacacionValue.fecha,
-      vaca.detalle = vacacionValue.detalle.name + " " + vacacionValue.anio,
-      vaca.dias = vacacionValue.dias * vacacionValue.detalle.value,
-      vaca.anio = vacacionValue.anio,
-      vaca.fechaToma = vacacionValue.fechaToma,
-      vaca.info = vacacionValue.info,
+    vaca.detalle = vacacionValue.detalle.name + " " + vacacionValue.anio;
+    vaca.dias = vacacionValue.dias * vacacionValue.detalle.value;
+    vaca.anio = vacacionValue.anio;
+    vaca.info = vacacionValue.info;
 
-      console.log(vaca);
+    if (vacacionValue.detalle.value === 1) {
+      let date = new Date();
+      //date.setDate(31);
+      //date.setMonth(12);
+      date.setFullYear(vacacionValue.anio, 11, 31);
+      console.log(date);
+      vaca.fecha = date;
+      vaca.fechaToma = date;
+
+    } else {
+      vaca.fecha = vacacionValue.fecha;
+      vaca.fechaToma = vacacionValue.fechaToma;
+    }
+
+    console.log(vaca);
     this.dialogRef.close(vaca);
   }
 
   hasError(controlName: string, errorName: string) {
     return this.form.controls[controlName].hasError(errorName);
+  }
+
+  onChange(): void {
+    console.log(this.isNuevaVacaccion)
+    if (this.isNuevaVacaccion) {
+      this.isNuevaVacaccion = false;
+    } else {
+      this.isNuevaVacaccion = true;
+    }
   }
 
   onNoClick(): void {
