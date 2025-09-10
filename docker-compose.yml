@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   restart: always
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./nginx/ssl:/etc/nginx/ssl
+  #   networks:
+  #     - rcm-network
+  #   depends_on:
+  #     - rcm-backend
+  #     - rcm-frontend
+
+  # rcm-backend:
+  #   build:
+  #     context: ./rcm-backend
+  #     dockerfile: Dockerfile
+  #   container_name: rcm-backend
+  #   restart: always
+  #   environment:
+  #     # Variables de base de datos
+  #     DATABASE_HOST: rcm-mysql
+  #     DATABASE_PORT: 3306
+  #     DATABASE_USER: ${MYSQL_USER}
+  #     DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+  #     DATABASE_NAME: ${MYSQL_DATABASE}
+  #     # Variables para JWT
+  #     jwtSecretKey: ${JWT_SECRET_KEY:-"defaultSecretKeyForDevelopment"}
+  #     jwtRefreshTokenKey: ${JWT_REFRESH_TOKEN_KEY:-"defaultRefreshTokenKeyForDevelopment"}
+  #     # Variables para CORS
+  #     CORS_ORIGIN: ${CORS_ORIGIN:-"https://app.rcmsa.ar"}
+  #     # Puerto de la aplicación
+  #     PORT: 4000
+  #   expose:
+  #     - "4000"
+  #   networks:
+  #     - rcm-network
+  #   volumes:
+  #     - ./rcm-backend/logs:/app/logs
+
+  # rcm-frontend:
+  #   build:
+  #     context: ./rcm-frontend
+  #     dockerfile: Dockerfile
+  #   container_name: rcm-frontend
+  #   restart: always
+  #   environment:
+  #     # URL de la API (usando HTTPS a través de Nginx)
+  #     NEXT_PUBLIC_API_URL: https://app.rcmsa.ar/api
+  #     # Configuración de NextAuth
+  #     NEXTAUTH_URL: https://app.rcmsa.ar
+  #     NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-"defaultNextAuthSecretForDevelopment"}
+  #   expose:
+  #     - "3000"
+  #   networks:
+  #     - rcm-network
+
+  rcm-mysql:
+    container_name: sae-mysql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./sae-data/mysql/mysql-data:/var/lib/mysql
+      - ./sae-data/mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+    networks:
+      - sae-network
+
+networks:
+  rcm-network:
+    driver: bridge
+
+volumes:
+  rcm-mysql-data:
