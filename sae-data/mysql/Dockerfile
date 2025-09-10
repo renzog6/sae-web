@@ -1,5 +1,5 @@
 #Create MySQL Image
-FROM mysql:8.0
+FROM mysql:8.0.40
 
 CMD ["--default-authentication-plugin=mysql_native_password"]
 
