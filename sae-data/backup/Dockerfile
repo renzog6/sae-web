@@ -1,16 +1,32 @@
 FROM alpine:latest
 
+# Establecer etiquetas para mejorar la mantenibilidad
+LABEL maintainer="admin@rcmsa.ar"
+LABEL description="Servicio de backup para la base de datos MySQL de SAE-Web"
+
+# Instalar dependencias en una sola capa para reducir el tamaño de la imagen
 RUN apk update && \
     apk upgrade && \
-    apk add --no-cache mysql-client bash file curl
+    apk add --no-cache mysql-client bash file curl tzdata && \
+    cp /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime && \
+    echo "America/Argentina/Buenos_Aires" > /etc/timezone && \
+    apk del tzdata
 
-# Add backup script
-ADD backup.sh /backup.sh
-RUN chmod +x /backup.sh
-COPY ./backup.sh /etc/periodic/daily
+# Crear directorio para backups
+RUN mkdir -p /var/backups && chmod 777 /var/backups
 
-CMD ["bash", "-c", "\
-    /etc/init.d/cron start && \
-    echo '0 0 * * * /backup.sh' > /etc/cron.d/backup-cron && \
-    cron && \
-    tail -f /var/log/cron.log"]
+# Variables de entorno para configuración
+ENV DB_HOST="sae-mysql" \
+    DB_USER="root" \
+    DB_NAME="sae-web" \
+    BACKUP_SCHEDULE="0 0 * * *" \
+    BACKUP_RETENTION_DAYS=7
+
+# Agregar script de backup y configurar permisos
+COPY backup.sh /backup.sh
+RUN chmod +x /backup.sh && \
+    mkdir -p /etc/periodic/daily && \
+    ln -s /backup.sh /etc/periodic/daily/backup
+
+# Configurar cron y ejecutar
+CMD ["sh", "-c", "crond -f -d 8 & echo \"${BACKUP_SCHEDULE} /backup.sh\" > /etc/crontabs/root && crond -f"]

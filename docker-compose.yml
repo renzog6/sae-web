@@ -1,28 +1,82 @@
 version: '3.8'
 
+# Servicios de la aplicación SAE-Web
 services:
 
+  # Servicio de base de datos MySQL
   sae-mysql:
     container_name: sae-mysql
-    image: mysql:8.0.40
-    command: --default-authentication-plugin=mysql_native_password
+    build:
+      context: ./sae-data/mysql
+      args:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
-      - ./sae-data/mysql/mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
       - ./sae-data/mysql/init:/docker-entrypoint-initdb.d
     ports:
       - "3307:3306"
     networks:
       - sae-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
+  # Servicio de backup automático
+  sae-backup:
+    container_name: sae-backup
+    build: ./sae-data/backup
+    restart: always
+    depends_on:
+      sae-mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=sae-mysql
+      - DB_USER=root
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_NAME=${MYSQL_DATABASE}
+      - BACKUP_RETENTION_DAYS=7
+      - BACKUP_SCHEDULE=0 0 * * *
+      - MAIL_SENDER=admin@rcmsa.ar
+      - MAIL_RECEIVER=admin@rcmsa.ar
+      - MAIL_PASSWORD=gTCs/E96eL
+      - TZ=America/Argentina/Buenos_Aires
+    volumes:
+      - backup-data:/var/backups
+    networks:
+      - sae-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+# Definición de redes
 networks:
   sae-network:
     driver: bridge
+    name: sae-network
 
+# Definición de volúmenes persistentes
 volumes:
   mysql-data:
+    name: sae-mysql-data
+  backup-data:
+    name: sae-backup-data
