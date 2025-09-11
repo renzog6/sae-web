@@ -1,3 +1,4 @@
+# Docker Compose para la aplicación SAE-Web
 # Servicios de la aplicación SAE-Web
 services:
 
@@ -12,8 +13,8 @@ services:
         - MYSQL_USER=${MYSQL_USER}
         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     restart: always
-    command: >-
-      bash -c "chmod +x /docker-entrypoint-initdb.d/*.sh && /entrypoint.sh mysqld"
+    # No es necesario el comando personalizado ya que los permisos se establecen en el Dockerfile
+    # y el entrypoint predeterminado de la imagen MySQL ya ejecuta los scripts .sh
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -22,7 +23,7 @@ services:
       - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./sae-data/mysql/init:/docker-entrypoint-initdb.d
-      - mysql-data:/var/lib/mysql
+      - ./sae-data/mysql-data:/var/lib/mysql
     ports:
       - "3307:3306"
     networks:
@@ -53,13 +54,14 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - DB_NAME=${MYSQL_DATABASE}
       - BACKUP_RETENTION_DAYS=7
+      - MAIL_SENDER=${MAIL_SENDER}
+      - MAIL_RECEIVER=${MAIL_RECEIVER}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_SERVER=${MAIL_SERVER}
       - BACKUP_SCHEDULE=0 0 * * *
-      - MAIL_SENDER=admin@rcmsa.ar
-      - MAIL_RECEIVER=admin@rcmsa.ar
-      - MAIL_PASSWORD=gTCs/E96eL
       - TZ=America/Argentina/Buenos_Aires
     volumes:
-      - backup-data:/var/backups
+      - ./sae-data/backup-data:/var/backups
     networks:
       - sae-network
     logging:

@@ -18,7 +18,7 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- Seleccionar la base de datos
-USE ${MYSQL_DATABASE};
+-- La línea USE será reemplazada por el script 00-prepare-sql.sh
 
 
 -- ----------------------------

@@ -9,6 +9,8 @@ node_modules/
 # Producción
 /build
 /dist
+/sae-data/backup-data
+/sae-data/mysql-data
 
 # Archivos de entorno (contienen secretos)
 .env

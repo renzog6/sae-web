@@ -7,9 +7,10 @@ LABEL description="Servicio de backup para la base de datos MySQL de SAE-Web"
 # Instalar dependencias en una sola capa para reducir el tamaño de la imagen
 RUN apk update && \
     apk upgrade && \
-    apk add --no-cache mysql-client bash file curl tzdata && \
+    apk add --no-cache mysql-client bash file curl tzdata ca-certificates mailx && \
     cp /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime && \
     echo "America/Argentina/Buenos_Aires" > /etc/timezone && \
+    update-ca-certificates && \
     apk del tzdata
 
 # Crear directorio para backups

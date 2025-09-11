@@ -1,8 +1,12 @@
+# Dockerfile para MySQL
 # MySQL Image optimizado
 FROM mysql:8.0.40
 
-# Configuración de autenticación
-CMD ["--default-authentication-plugin=mysql_native_password"]
+# Instalar tzdata para que MySQL pueda cargar los timezones
+RUN microdnf install -y tzdata && microdnf clean all
+
+# Configuración de autenticación y SSL con sintaxis moderna
+CMD ["--authentication-policy=mysql_native_password", "--host-cache-size=0"]
 
 # Usar ARG en lugar de ENV para evitar exponer credenciales en la imagen
 ARG MYSQL_ROOT_PASSWORD
@@ -18,6 +22,9 @@ ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
 # Copiar archivos de inicialización
 COPY ./init /docker-entrypoint-initdb.d
+
+# Asegurar que los scripts tengan permisos de ejecución
+RUN chmod +x /docker-entrypoint-initdb.d/*.sh
 
 # Exponer puerto MySQL
 EXPOSE 3306

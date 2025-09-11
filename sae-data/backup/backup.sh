@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Usar variables de entorno o valores por defecto
-DB_HOST=${DB_HOST:-"sae-mysql"}
-DB_USER=${DB_USER:-"root"}
-DB_PASS=${MYSQL_ROOT_PASSWORD:-"Resconi.843"}
-DB_NAME=${DB_NAME:-"sae-web"}
-BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-7}
+# Usar variables de entorno proporcionadas por docker-compose.yml
+DB_HOST=${DB_HOST}
+DB_USER=${DB_USER}
+DB_PASS=${MYSQL_ROOT_PASSWORD}
+DB_NAME=${DB_NAME}
+BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS}
 
 # Backup directory
 BACKUP_DIR="/var/backups"
@@ -27,8 +27,8 @@ log_message() {
 
 log_message "Iniciando backup de la base de datos $DB_NAME en $DB_HOST"
 
-# MySQL dump command con manejo de errores
-MYSQL_DUMP="mysqldump --single-transaction -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME | gzip > $BACKUP_FILE"
+# MySQL dump command con manejo de errores y desactivando SSL para evitar errores con certificados autofirmados
+MYSQL_DUMP="mysqldump --single-transaction --ssl-mode=DISABLED -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME | gzip > $BACKUP_FILE"
 
 # Execute the backup command
 if eval $MYSQL_DUMP; then
@@ -51,10 +51,11 @@ if [ -f "$BACKUP_FILE" ]; then
     BACKUP_COUNT=$(find "$BACKUP_DIR" -name "backup_*.sql.gz" | wc -l)
     
     # Configuración de correo electrónico desde variables de entorno
-    MAIL_SENDER=${MAIL_SENDER:-"admin@rcmsa.ar"}
-    MAIL_RECEIVER=${MAIL_RECEIVER:-"admin@rcmsa.ar"}
-    MAIL_PASSWORD=${MAIL_PASSWORD:-"gTCs/E96eL"}
-    MAIL_SERVER=${MAIL_SERVER:-"smtps://c1440662.ferozo.com:465"}
+    MAIL_SENDER=${MAIL_SENDER}
+    MAIL_RECEIVER=${MAIL_RECEIVER}
+    MAIL_PASSWORD=${MAIL_PASSWORD}
+    # Usar el servidor SMTP configurado en las variables de entorno
+    MAIL_SERVER=${MAIL_SERVER}
     
     # Asunto y cuerpo del correo con más información
     TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
@@ -67,17 +68,36 @@ if [ -f "$BACKUP_FILE" ]; then
     # Determinar el tipo MIME del archivo
     MIME_TYPE=$(file --mime-type "$BACKUP_FILE" | sed 's/.*: //')
     
-    # Enviar correo con el archivo adjunto
-    if curl -s --url "$MAIL_SERVER" --ssl-reqd \
+    # Crear un archivo temporal para el correo con formato MIME
+    TEMP_MAIL=$(mktemp)
+    
+    # Crear el correo con formato MIME adecuado
+    {
+        echo "From: $MAIL_SENDER"
+        echo "To: $MAIL_RECEIVER"
+        echo "Subject: $SUBJECT"
+        echo "MIME-Version: 1.0"
+        echo "Content-Type: text/plain"
+        echo ""
+        echo -e "$BODY"
+    } > "$TEMP_MAIL"
+    
+    # Enviar correo sin adjunto (más simple y confiable)
+    if curl --silent --show-error --url "$MAIL_SERVER" \
         --mail-from "$MAIL_SENDER" \
-        --mail-rcpt "$MAIL_RECEIVER" --user "$MAIL_SENDER:$MAIL_PASSWORD" \
-        -H "Subject: $SUBJECT" -H "From: $MAIL_SENDER" -H "To: $MAIL_RECEIVER" -F \
-        '=(;type=multipart/mixed' -F "=$BODY;type=text/plain" -F \
-        "file=@$BACKUP_FILE;type=$MIME_TYPE;encoder=base64" -F '=)'; then
+        --mail-rcpt "$MAIL_RECEIVER" \
+        --user "$MAIL_SENDER:$MAIL_PASSWORD" \
+        --upload-file "$TEMP_MAIL" \
+        --insecure \
+        --ssl; then
         log_message "Correo enviado exitosamente"
     else
         log_message "ERROR: No se pudo enviar el correo de notificación"
+        log_message "Continuando con el proceso de backup a pesar del error de correo"
     fi
+    
+    # Eliminar archivo temporal
+    rm -f "$TEMP_MAIL"
     
     log_message "Proceso de backup completado exitosamente"
 else
