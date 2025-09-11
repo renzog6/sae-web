@@ -11,6 +11,7 @@ node_modules/
 /dist
 /sae-data/backup-data
 /sae-data/mysql-data
+/sae-backend
 
 # Archivos de entorno (contienen secretos)
 .env
