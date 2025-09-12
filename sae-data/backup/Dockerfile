@@ -19,7 +19,7 @@ RUN mkdir -p /var/backups && chmod 777 /var/backups
 # Variables de entorno para configuración
 ENV DB_HOST="sae-mysql" \
     DB_USER="root" \
-    DB_NAME="sae-web" \
+    DB_NAME="sae_web" \
     BACKUP_SCHEDULE="0 0 * * *" \
     BACKUP_RETENTION_DAYS=7
 

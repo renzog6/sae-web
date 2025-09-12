@@ -20,7 +20,7 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - TZ=America/Argentina/Buenos_Aires
+      - TZ=${TZ}
     volumes:
       - ./sae-data/mysql/init:/docker-entrypoint-initdb.d
       - ./sae-data/mysql-data:/var/lib/mysql
@@ -59,7 +59,7 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - MAIL_SERVER=${MAIL_SERVER}
       - BACKUP_SCHEDULE=0 0 * * *
-      - TZ=America/Argentina/Buenos_Aires
+      - TZ=${TZ}
     volumes:
       - ./sae-data/backup-data:/var/backups
     networks:
@@ -69,6 +69,46 @@ services:
       options:
         max-size: "5m"
         max-file: "3"
+
+  # Servicio de backend API
+  sae-backend:
+    container_name: sae-backend
+    build:
+      context: ./sae-backend
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      sae-mysql:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@sae-mysql:3306/${MYSQL_DATABASE}
+      - PORT=3000
+      - API_PREFIX=api
+      - JWT_SECRET=${JWT_SECRET:-default-jwt-secret-change-in-production}
+      - TZ=${TZ}
+    ports:
+      - "3000:3000"
+    networks:
+      - sae-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        npx prisma migrate deploy &&
+        echo 'Starting SAE Backend API...' &&
+        node dist/main
+      "
 
 # Definición de redes
 networks:
