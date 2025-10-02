@@ -1,3 +1,5 @@
+# Dockerfile para SAE-Backup con Alpine Linux
+# path: sae-data/backup/Dockerfile
 FROM alpine:latest
 
 # Establecer etiquetas para mejorar la mantenibilidad

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# pathfile: sae-data/backup/backup.sh
+
+# Descripción: Script para realizar backup de la base de datos MySQL y enviar notificaciones por correo electrónico
+# Requiere: mysqldump, gzip, find, du, curl, date, mkdir, tee, hostname, file, mktemp
+# Autor: Gorosito Renzo + AI
+# Fecha: 2024-06-27
+# Versión: 1.0 
+
 # Usar variables de entorno proporcionadas por docker-compose.yml
 DB_HOST=${DB_HOST}
 DB_USER=${DB_USER}
