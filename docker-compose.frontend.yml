@@ -117,17 +117,21 @@ services:
     build:
       context: ./sae-frontend
       dockerfile: Dockerfile
+      args:
+        # Variables para build-time (incluidas en el bundle)
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXTAUTH_URL=${NEXTAUTH_URL}
+        - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     restart: always
     depends_on:
       sae-backend:
         condition: service_started
     environment:
-      - NODE_ENV=production      
-      - API_URL=${API_URL}
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-      - NEXTAUTH_URL=${NEXTAUTH_URL}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      # Variables runtime (no incluidas en el bundle)
+      - NODE_ENV=production
       - TZ=${TZ}
+      # API_URL para server-side rendering (interno Docker)
+      - API_URL=${API_URL}
     ports:
       - "3303:3003"
     networks:
@@ -136,7 +140,6 @@ services:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://sae-frontend:3303 || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
       start_period: 40s
     logging:
       driver: "json-file"

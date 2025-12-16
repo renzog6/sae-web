@@ -20,7 +20,7 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - TZ=${TZ}
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./sae-data/mysql/init:/docker-entrypoint-initdb.d
       - ./sae-data/mysql-data:/var/lib/mysql
@@ -59,82 +59,15 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - MAIL_SERVER=${MAIL_SERVER}
       - BACKUP_SCHEDULE=0 0 * * *
-      - TZ=${TZ}
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./sae-data/backup-data:/var/backups
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
     networks:
       - sae-network
     logging:
       driver: "json-file"
       options:
         max-size: "5m"
-        max-file: "3"
-
-  # Servicio de backend API
-  sae-backend:
-    container_name: sae-backend
-    build:
-      context: ./sae-backend
-      dockerfile: Dockerfile
-    restart: always
-    depends_on:
-      sae-mysql:
-        condition: service_healthy
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@sae-mysql:3306/${MYSQL_DATABASE}
-      - PORT=3005
-      - HOST=0.0.0.0
-      - API_PREFIX=api
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION}      
-      - TZ=${TZ}
-    ports:
-      - "3305:3005"
-    volumes:
-      - ./sae-data/backend-data:/storage
-    networks:
-      - sae-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"    
-
-  # Servicio de frontend
-  sae-frontend:
-    container_name: sae-frontend
-    build:
-      context: ./sae-frontend
-      dockerfile: Dockerfile
-    restart: always
-    depends_on:
-      sae-backend:
-        condition: service_started
-    environment:
-      - NODE_ENV=production      
-      - API_URL=${API_URL}
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-      - NEXTAUTH_URL=${NEXTAUTH_URL}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - TZ=${TZ}
-    ports:
-      - "3303:3003"
-    networks:
-      - sae-network
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://sae-frontend:3303 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
         max-file: "3"
 
 # Definición de redes
@@ -149,5 +82,3 @@ volumes:
     name: sae-mysql-data
   backup-data:
     name: sae-backup-data
-  backend-data:
-    name: sae-backend-data
