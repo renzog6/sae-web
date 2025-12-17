@@ -120,7 +120,7 @@ services:
       args:
         # Variables para build-time (incluidas en el bundle)
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-        - NEXTAUTH_URL=${NEXTAUTH_URL}
+        
         - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     restart: always
     depends_on:
