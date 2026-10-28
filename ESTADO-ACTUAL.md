@@ -77,7 +77,7 @@ El sistema tenía dos transportes en paralelo. El frontend usaba GraphQL en 2 ar
 ```
 backend   tsc --noEmit  -> 0 errores
           nest build    -> OK
-          test:e2e      -> 28 pasan / 64 fallan (23 previos + 5 de auth)
+          test:e2e      -> 32 pasan / 64 fallan (23 previos + 5 de auth + 4 de archivos)
           runtime       -> /api/health 200, /api/docs 200, /api/companies 401
 
 frontend  tsc --noEmit  -> 0 errores
@@ -115,14 +115,14 @@ controller, con la misma mecánica del paso anterior.
 
 ### Bloqueantes de seguridad (sin resolver)
 
-P0-1 y P0-8 están cerrados. Los demás siguen abiertos: la actualización de frameworks no los tocó.
+P0-1, P0-2, P0-4 y P0-8 están cerrados. Quedan abiertos P0-3, P0-5, P0-6 y P0-7.
 
 | ID | Problema | Verificación |
 |---|---|---|
 | ~~P0-1~~ | ~~44 endpoints REST sin autenticación~~ | **RESUELTO** (`3d142b6`): guards globales + `@Public()` |
-| P0-2 | IDOR en `/api/server-files/:id/download` (IDs secuenciales) | Requiere token, pero **sin control de pertenencia** |
+| ~~P0-2~~ | ~~IDOR en `/api/server-files/:id/download`~~ | **RESUELTO** (`a0a4e70`): control de pertenencia por empresa + 4 tests |
 | P0-3 | Subida de archivos sin validar tipo MIME | Solo límite de 10 MB |
-| P0-4 | Sin `prisma/migrations/`; el entrypoint omite migraciones | No hay historial de esquema |
+| ~~P0-4~~ | ~~Sin `prisma/migrations/`~~ | **RESUELTO** (`a0a4e70`): baseline 0_init verificado sobre base vacía; el entrypoint aplica `migrate deploy` |
 | P0-5 | Secretos reales en `.env` y repositorios sin remoto | Sin backup fuera del equipo |
 | P0-6 | CORS abierto (`enableCors()` sin orígenes) | — |
 | P0-7 | `@Roles(Role.MANAGER)` referencia roles que no existen en Prisma | Restringe de más, en silencio |
