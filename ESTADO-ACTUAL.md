@@ -103,7 +103,7 @@ Los hallazgos P0 del análisis **siguen abiertos**: la actualización de framewo
 | P0-5 | Secretos reales en `.env` y repositorios sin remoto | Sin backup fuera del equipo |
 | P0-6 | CORS abierto (`enableCors()` sin orígenes) | — |
 | P0-7 | `@Roles(Role.MANAGER)` referencia roles que no existen en Prisma | Restringe de más, en silencio |
-| **P0-8** | **Escalada de privilegios por mass assignment en el CRUD genérico** | `/users` resuelto (`574ddb0`); **~30 endpoints POST/PUT siguen sin validar el body** |
+| ~~P0-8~~ | ~~Escalada de privilegios por mass assignment en el CRUD genérico~~ | **RESUELTO** (`574ddb0` en `/users`, `2a52d83` en los 30 endpoints restantes) |
 
 ### Deuda técnica
 
