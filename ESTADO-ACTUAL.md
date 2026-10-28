@@ -86,13 +86,36 @@ frontend  tsc --noEmit  -> 0 errores
           runtime       -> /login 200, /dashboard 307
 ```
 
+### 4. Contrato de API (OpenAPI)
+
+El CRUD genérico recibía `@Body() dto: any`, y con metatipo `Object` el
+`ValidationPipe` **no valida**. Dos consecuencias: los endpoints aceptaban
+cualquier body (mass assignment) y Swagger no podía documentarlos.
+
+- `create`/`update` tipados con su DTO en 20 controllers (30 endpoints) — `2a52d83`
+- `PartialType` movido a `@nestjs/swagger` en 22 DTOs: el de `@nestjs/mapped-types`
+  no propaga `@ApiProperty`, así que esos schemas salían **vacíos** — `78108b1`
+- `openapi.json` versionado, exportado desde la app compilada (sin abrir puerto)
+
+```bash
+npm run openapi:export     # backend: regenera openapi.json
+npm run openapi:types      # frontend: regenera lib/api/schema.d.ts
+```
+
+Contrato: **168 paths, 80 schemas, 0 vacíos** (antes había 22 vacíos).
+
+**Límite conocido:** documenta los cuerpos de **entrada** (Create/Update) pero no
+los de **respuesta**, porque `BaseController.findAll/findOne` no declaran
+`@ApiOkResponse` con un tipo concreto. Tipar respuestas requiere ese decorador por
+controller, con la misma mecánica del paso anterior.
+
 ---
 
 ## Pendiente, por prioridad
 
 ### Bloqueantes de seguridad (sin resolver)
 
-Los hallazgos P0 del análisis **siguen abiertos**: la actualización de frameworks no los tocó.
+P0-1 y P0-8 están cerrados. Los demás siguen abiertos: la actualización de frameworks no los tocó.
 
 | ID | Problema | Verificación |
 |---|---|---|
