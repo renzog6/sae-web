@@ -1,0 +1,147 @@
+# Estado actual del proyecto SAE
+
+**Última actualización:** 28 de octubre de 2026
+
+Este documento es la referencia vigente. Los documentos de análisis y planificación
+(`ANALISIS-TECNICO-SAE.md`, `PLAN-ACTUALIZACION-NEXT-NEST.md`, `DECISION-GRAPHQL.md`)
+describen el diagnóstico y el plan original; **el plan ya fue ejecutado**.
+
+---
+
+## Stack actual
+
+### Backend (`sae-backend`)
+
+| Componente | Versión |
+|---|---|
+| NestJS | **12.3.2** |
+| TypeScript | **6.0.3** |
+| Node.js | **24 LTS** (Docker `node:24-alpine`) |
+| Prisma | 6.19.1 (MySQL) |
+| Express | 5.3.0 |
+| Jest | 30.5.2 |
+| API | **REST únicamente** (GraphQL eliminado) |
+
+### Frontend (`sae-frontend`)
+
+| Componente | Versión |
+|---|---|
+| Next.js | **16.4.3** (App Router, Turbopack) |
+| React | **19.3.1** |
+| TypeScript | 5.x |
+| Tailwind CSS | 4.x |
+| TanStack Query | 5.x |
+| NextAuth | 4.24 |
+| Node.js | **24 LTS** |
+
+### Puertos
+
+- Frontend: **3003**
+- Backend: **3305** (`API_PREFIX=api` → `/api/...`)
+
+---
+
+## Trabajo realizado
+
+### 1. Eliminación de GraphQL
+
+El sistema tenía dos transportes en paralelo. El frontend usaba GraphQL en 2 archivos
+(de 341) y el backend mantenía 35 resolvers. Se consolidó todo en REST.
+
+- Frontend: −31.900 líneas (`lib/graphql/`, codegen, 7 dependencias)
+- Backend: −12.300 líneas (35 resolvers, 688 decoradores en 112 archivos, `schema.gql`,
+  `common/types/graphql.ts`, 4 dependencias)
+- El backend quedó sin ninguna referencia a GraphQL (`npm ls` del grafo devuelve *empty*)
+
+### 2. Actualización de frameworks
+
+| Fase | Resultado |
+|---|---|
+| Node 24 LTS | Dockerfiles + `.nvmrc` en ambos proyectos |
+| Next.js 15.5.3 → 16.4.3 | `middleware.ts` → `proxy.ts`, Turbopack por defecto, `next lint` → ESLint CLI |
+| NestJS 10 → 11 | Express 5: `forRoutes("*")` → `forRoutes("{*splat}")` |
+| NestJS 11 → 12 | TypeScript 6, Jest 30, `baseUrl` eliminado, scripts con `--experimental-vm-modules` |
+
+### 3. Correcciones que aparecieron en el camino
+
+- `moduleNameMapper` de Jest incompleto: los 12 e2e no ejecutaban **ningún** test
+- Crash en `companies/list`: `categories` recibía `{data, meta}` y llamaba `.sort()`
+- Imports `src/prisma/...` (solo resolvían por `baseUrl`) → `@prisma/...`
+- 4 errores de lint nuevos por `<a>` internos → `next/link`
+- Filtro `status` de equipos que nunca se enviaba al backend (documentado en el código)
+
+---
+
+## Verificación al día de hoy
+
+```
+backend   tsc --noEmit  -> 0 errores
+          nest build    -> OK
+          test:e2e      -> 23 pasan / 64 fallan
+          runtime       -> /api/health 200, /api/docs 200, /api/companies 401
+
+frontend  tsc --noEmit  -> 0 errores
+          next build    -> OK, 60 rutas
+          eslint        -> 480 problemas / 9 errores
+          runtime       -> /login 200, /dashboard 307
+```
+
+---
+
+## Pendiente, por prioridad
+
+### Bloqueantes de seguridad (sin resolver)
+
+Los hallazgos P0 del análisis **siguen abiertos**: la actualización de frameworks no los tocó.
+
+| ID | Problema | Verificación |
+|---|---|---|
+| P0-1 | 44 endpoints REST sin autenticación (10 controllers) | `/api/tires/assignments/open` responde **200 sin token** |
+| P0-2 | IDOR en `/api/server-files/:id/download` (IDs secuenciales) | Sin auth ni control de pertenencia |
+| P0-3 | Subida de archivos sin validar tipo MIME | Solo límite de 10 MB |
+| P0-4 | Sin `prisma/migrations/`; el entrypoint omite migraciones | No hay historial de esquema |
+| P0-5 | Secretos reales en `.env` y repositorios sin remoto | Sin backup fuera del equipo |
+| P0-6 | CORS abierto (`enableCors()` sin orígenes) | — |
+| P0-7 | `@Roles(Role.MANAGER)` referencia roles que no existen en Prisma | Restringe de más, en silencio |
+
+### Deuda técnica
+
+| Ítem | Detalle |
+|---|---|
+| 9 errores de lint (frontend) | `@ts-nocheck` en `equipment-form.tsx`, `equipment-model-form.tsx`, `tire-model-form.tsx` |
+| 64 e2e fallando | Rutas mal escritas en la suite (`/companies/subcategories` vs `/business-subcategories`) |
+| 0 tests unitarios | 16 carpetas `tests/` vacías en el backend |
+| Sin CI | Nada valida `tsc`, build ni migraciones en cada PR |
+| `strictNullChecks: false` | En el backend |
+| 1 vulnerabilidad crítica | En dependencias de producción del frontend |
+
+---
+
+## Commits de la actualización
+
+### `sae-frontend`
+
+| Hash | Descripción |
+|---|---|
+| `497f98d` | shadcn/ui + dependencias de diseño |
+| `7781353` | Refactor de la capa de aplicación de empleados |
+| `8077041` | Hooks `useCompanies`/`useEquipments` a REST |
+| `56d1b74` | Eliminación de la capa GraphQL |
+| `5bafeec` | Next.js 16.4.3 + React 19.3.1 |
+| `5e8151c` | Node 24 LTS |
+
+### `sae-backend`
+
+| Hash | Descripción |
+|---|---|
+| `0314840` | `moduleNameMapper` de Jest |
+| `58f699c` | Eliminación de resolvers y módulo GraphQL |
+| `75b974e` | Eliminación de decoradores GraphQL en DTOs |
+| `2890b73` | NestJS 11 (Express 5) |
+| `690f927` | Node 24 LTS |
+| `0db4f73` | NestJS 12 + TypeScript 6 + Jest 30 |
+
+### Ramas
+
+El trabajo está en dos ramas **sin mergear**: `chore/next-16` (frontend) y `chore/nest-11`
+(backend). Existe el tag `pre-graphql-removal` en ambos repos como punto de retorno.

@@ -1,5 +1,8 @@
 # Análisis técnico del proyecto SAE
 
+> **Estado:** plan ejecutado. El estado vigente esta en [ESTADO-ACTUAL.md](ESTADO-ACTUAL.md).
+
+
 **Fecha:** 27 de octubre de 2026
 **Alcance:** `sae-backend` (NestJS + Prisma + GraphQL/REST) y `sae-frontend` (Next.js 15 + React 19)
 **Método:** inspección estática del código, ejecución de `tsc`, ESLint, `npm audit` y revisión del modelo de datos. **No** se levantó la base de datos ni se ejecutó la aplicación.

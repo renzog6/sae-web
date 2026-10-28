@@ -1,5 +1,8 @@
 # Decisión: qué hacer con GraphQL en SAE
 
+> **Estado:** plan ejecutado. El estado vigente esta en [ESTADO-ACTUAL.md](ESTADO-ACTUAL.md).
+
+
 **Fecha:** 27 de octubre de 2026
 
 ---

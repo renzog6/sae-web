@@ -1,5 +1,8 @@
 # Plan de actualización: Next.js y NestJS a versiones estables / LTS
 
+> **Estado:** plan ejecutado. El estado vigente esta en [ESTADO-ACTUAL.md](ESTADO-ACTUAL.md).
+
+
 **Fecha:** 27 de octubre de 2026
 **Estado de partida:** `next@15.5.3`, `@nestjs/core@10.4.20`, Node `22.14.0` (local) y `node:22-alpine` (Docker)
 
