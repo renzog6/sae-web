@@ -77,12 +77,12 @@ El sistema tenía dos transportes en paralelo. El frontend usaba GraphQL en 2 ar
 ```
 backend   tsc --noEmit  -> 0 errores
           nest build    -> OK
-          test:e2e      -> 23 pasan / 64 fallan
+          test:e2e      -> 28 pasan / 64 fallan (23 previos + 5 de auth)
           runtime       -> /api/health 200, /api/docs 200, /api/companies 401
 
 frontend  tsc --noEmit  -> 0 errores
           next build    -> OK, 60 rutas
-          eslint        -> 480 problemas / 9 errores
+          eslint        -> 471 warnings / 0 errores
           runtime       -> /login 200, /dashboard 307
 ```
 
@@ -96,13 +96,14 @@ Los hallazgos P0 del análisis **siguen abiertos**: la actualización de framewo
 
 | ID | Problema | Verificación |
 |---|---|---|
-| P0-1 | 44 endpoints REST sin autenticación (10 controllers) | `/api/tires/assignments/open` responde **200 sin token** |
-| P0-2 | IDOR en `/api/server-files/:id/download` (IDs secuenciales) | Sin auth ni control de pertenencia |
+| ~~P0-1~~ | ~~44 endpoints REST sin autenticación~~ | **RESUELTO** (`3d142b6`): guards globales + `@Public()` |
+| P0-2 | IDOR en `/api/server-files/:id/download` (IDs secuenciales) | Requiere token, pero **sin control de pertenencia** |
 | P0-3 | Subida de archivos sin validar tipo MIME | Solo límite de 10 MB |
 | P0-4 | Sin `prisma/migrations/`; el entrypoint omite migraciones | No hay historial de esquema |
 | P0-5 | Secretos reales en `.env` y repositorios sin remoto | Sin backup fuera del equipo |
 | P0-6 | CORS abierto (`enableCors()` sin orígenes) | — |
 | P0-7 | `@Roles(Role.MANAGER)` referencia roles que no existen en Prisma | Restringe de más, en silencio |
+| **P0-8** | **Escalada de privilegios por mass assignment en el CRUD genérico** | `/users` resuelto (`574ddb0`); **~30 endpoints POST/PUT siguen sin validar el body** |
 
 ### Deuda técnica
 
