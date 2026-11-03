@@ -1,6 +1,6 @@
 # Estado actual del proyecto SAE
 
-**Última actualización:** 3 de noviembre de 2026
+**Última actualización:** 3 de noviembre de 2026 (post-merge a main)
 
 Este documento es la referencia vigente. Los documentos de análisis y planificación
 (`ANALISIS-TECNICO-SAE.md`, `PLAN-ACTUALIZACION-NEXT-NEST.md`, `DECISION-GRAPHQL.md`)
@@ -157,6 +157,7 @@ P0-1, P0-2, P0-3, P0-4, P0-6, P0-7 y P0-8 están cerrados. El único ítem abier
 | `3bf68e8` | Fix(forms): eliminar los @ts-nocheck restaurando el Combobox con API de opciones |
 | `d7ea134` | Feat(api): tipos generados desde el contrato OpenAPI |
 | `7fb710d` | Feat(api): regenerar schema.d.ts tras actualización de openapi |
+| `2f2a6b8` | **merge: consolidar Next.js 16, React 19 y tipos OpenAPI en main** |
 
 ### `sae-backend`
 
@@ -177,8 +178,17 @@ P0-1, P0-2, P0-3, P0-4, P0-6, P0-7 y P0-8 están cerrados. El único ítem abier
 | `aaec5df` | Cerrar P0-6 (CORS) y P0-7 (sincronizar roles con Prisma) |
 | `9da37c5` | Cerrar P0-3 con validación de MIME y extensiones en upload |
 | `57647c1` | Consolidar suite e2e en smoke test y seguridad (Plan A) |
+| `94ca6ee` | **merge: consolidar NestJS 12, REST y hardening de seguridad en main** |
 
 ### Ramas
 
-El trabajo está en dos ramas **sin mergear**: `chore/next-16` (frontend) y `chore/nest-11`
-(backend). Existe el tag `pre-graphql-removal` en ambos repos como punto de retorno.
+Ambas ramas de trabajo fueron mergeadas a `main` con `--no-ff` y eliminadas:
+
+| Repo | Rama | Merge commit | Tag de seguridad |
+|---|---|---|---|
+| `sae-backend` | `chore/nest-11` | `94ca6ee` | `pre-merge-checkpoint` |
+| `sae-frontend` | `chore/next-16` | `2f2a6b8` | `pre-merge-checkpoint` |
+
+El root repo (`sae-web-ia`) fue actualizado con los nuevos punteros de submódulos en el commit `bd3b885`.
+
+Existe también el tag `pre-graphql-removal` en ambos repos como punto de retorno anterior.
