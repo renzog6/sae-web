@@ -77,7 +77,7 @@ El sistema tenía dos transportes en paralelo. El frontend usaba GraphQL en 2 ar
 ```
 backend   tsc --noEmit  -> 0 errores
           nest build    -> OK
-          test:e2e      -> 32 pasan / 64 fallan (23 previos + 5 de auth + 4 de archivos)
+          test:e2e      -> 19 pasan / 0 fallan (3 suites: auth, seguridad archivos, smoke test de negocio) en ~15s
           runtime       -> /api/health 200, /api/docs 200, /api/companies 401
 
 frontend  tsc --noEmit  -> 0 errores
@@ -133,7 +133,7 @@ P0-1, P0-2, P0-3, P0-4, P0-6, P0-7 y P0-8 están cerrados. El único ítem abier
 | Ítem | Detalle |
 |---|---|
 | ~~9 errores de lint (frontend)~~ | **RESUELTO** (`3bf68e8`): `@ts-nocheck` eliminados en los forms de equipos y neumáticos |
-| 64 e2e fallando | Rutas mal escritas en la suite (`/companies/subcategories` vs `/business-subcategories`) |
+| ~~64 e2e fallando~~ | **RESUELTO** (`57647c1`): Suite consolidada (Plan A: poda de 12 specs obsoletos + Smoke Test de flujos clave) |
 | 0 tests unitarios | 16 carpetas `tests/` vacías en el backend |
 | Sin CI | Nada valida `tsc`, build ni migraciones en cada PR |
 | `strictNullChecks: false` | En el backend |
@@ -176,6 +176,7 @@ P0-1, P0-2, P0-3, P0-4, P0-6, P0-7 y P0-8 están cerrados. El único ítem abier
 | `a0a4e70` | Cerrar IDOR en archivos y establecer baseline de migraciones |
 | `aaec5df` | Cerrar P0-6 (CORS) y P0-7 (sincronizar roles con Prisma) |
 | `9da37c5` | Cerrar P0-3 con validación de MIME y extensiones en upload |
+| `57647c1` | Consolidar suite e2e en smoke test y seguridad (Plan A) |
 
 ### Ramas
 
