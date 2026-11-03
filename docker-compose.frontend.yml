@@ -1,0 +1,31 @@
+services:
+  sae-frontend:
+    build:
+      context: ./sae-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?Set NEXT_PUBLIC_API_URL in .env}
+    restart: unless-stopped
+    depends_on:
+      sae-backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      API_URL: http://sae-backend:3005/api
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?Set NEXT_PUBLIC_API_URL in .env}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:?Set NEXTAUTH_URL in .env}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?Set NEXTAUTH_SECRET in .env}
+      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+    ports:
+      - "3303:3003"
+    networks:
+      - sae-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  sae-network:
+    driver: bridge

@@ -1,0 +1,57 @@
+services:
+  sae-mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
+      MYSQL_USER: ${MYSQL_USER:?Set MYSQL_USER in .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - sae-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'mysqladmin ping -h 127.0.0.1 -uroot -p"$${MYSQL_ROOT_PASSWORD}" --silent',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  sae-backup:
+    build: ./sae-data/backup
+    restart: unless-stopped
+    depends_on:
+      sae-mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: sae-mysql
+      DB_USER: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      DB_NAME: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 0 * * *}
+      MAIL_SENDER: ${MAIL_SENDER:-}
+      MAIL_RECEIVER: ${MAIL_RECEIVER:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_SERVER: ${MAIL_SERVER:-}
+      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+    volumes:
+      - backup-data:/var/backups
+    networks:
+      - sae-network
+
+networks:
+  sae-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  backup-data:

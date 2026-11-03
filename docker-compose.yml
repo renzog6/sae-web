@@ -1,0 +1,125 @@
+services:
+  sae-mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
+      MYSQL_USER: ${MYSQL_USER:?Set MYSQL_USER in .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - sae-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'mysqladmin ping -h 127.0.0.1 -uroot -p"$${MYSQL_ROOT_PASSWORD}" --silent',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  sae-backup:
+    build: ./sae-data/backup
+    restart: unless-stopped
+    depends_on:
+      sae-mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: sae-mysql
+      DB_USER: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      DB_NAME: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 0 * * *}
+      MAIL_SENDER: ${MAIL_SENDER:-}
+      MAIL_RECEIVER: ${MAIL_RECEIVER:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_SERVER: ${MAIL_SERVER:-}
+      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+    volumes:
+      - backup-data:/var/backups
+    networks:
+      - sae-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  sae-backend:
+    build:
+      context: ./sae-backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      sae-mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://${MYSQL_USER:?Set MYSQL_USER in .env}:${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}@sae-mysql:3306/${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
+      PORT: 3005
+      HOST: 0.0.0.0
+      API_PREFIX: api
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-1d}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3303}
+      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+    ports:
+      - "3305:3005"
+    volumes:
+      - backend-data:/app/storage
+    networks:
+      - sae-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  sae-frontend:
+    build:
+      context: ./sae-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?Set NEXT_PUBLIC_API_URL in .env}
+    restart: unless-stopped
+    depends_on:
+      sae-backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      API_URL: http://sae-backend:3005/api
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?Set NEXT_PUBLIC_API_URL in .env}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:?Set NEXTAUTH_URL in .env}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?Set NEXTAUTH_SECRET in .env}
+      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+    ports:
+      - "3303:3003"
+    networks:
+      - sae-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  sae-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  backup-data:
+  backend-data:
