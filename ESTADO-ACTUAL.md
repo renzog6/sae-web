@@ -115,13 +115,13 @@ controller, con la misma mecánica del paso anterior.
 
 ### Bloqueantes de seguridad (sin resolver)
 
-P0-1, P0-2, P0-4, P0-6, P0-7 y P0-8 están cerrados. Quedan abiertos P0-3 y P0-5.
+P0-1, P0-2, P0-3, P0-4, P0-6, P0-7 y P0-8 están cerrados. El único ítem abierto es P0-5.
 
 | ID | Problema | Verificación |
 |---|---|---|
 | ~~P0-1~~ | ~~44 endpoints REST sin autenticación~~ | **RESUELTO** (`3d142b6`): guards globales + `@Public()` |
 | ~~P0-2~~ | ~~IDOR en `/api/server-files/:id/download`~~ | **RESUELTO** (`a0a4e70`): control de pertenencia por empresa + 4 tests |
-| P0-3 | Subida de archivos sin validar tipo MIME | Solo límite de 10 MB |
+| ~~P0-3~~ | ~~Subida de archivos sin validar tipo MIME~~ | **RESUELTO** (`9da37c5`): whitelist MIME/extensiones en Multer + cleanup temporales + 2 tests |
 | ~~P0-4~~ | ~~Sin `prisma/migrations/`~~ | **RESUELTO** (`a0a4e70`): baseline 0_init verificado sobre base vacía; el entrypoint aplica `migrate deploy` |
 | P0-5 | Secretos reales en `.env` y repositorios sin remoto | Sin backup fuera del equipo |
 | ~~P0-6~~ | ~~CORS abierto (`enableCors()` sin orígenes)~~ | **RESUELTO** (`aaec5df`): whitelist vía `CORS_ORIGINS` en `main.ts` |
@@ -156,6 +156,7 @@ P0-1, P0-2, P0-4, P0-6, P0-7 y P0-8 están cerrados. Quedan abiertos P0-3 y P0-5
 | `5cb0257` | Docs: actualizar la documentación al stack vigente |
 | `3bf68e8` | Fix(forms): eliminar los @ts-nocheck restaurando el Combobox con API de opciones |
 | `d7ea134` | Feat(api): tipos generados desde el contrato OpenAPI |
+| `7fb710d` | Feat(api): regenerar schema.d.ts tras actualización de openapi |
 
 ### `sae-backend`
 
@@ -174,6 +175,7 @@ P0-1, P0-2, P0-4, P0-6, P0-7 y P0-8 están cerrados. Quedan abiertos P0-3 y P0-5
 | `78108b1` | Exportar contrato OpenAPI y completar los schemas |
 | `a0a4e70` | Cerrar IDOR en archivos y establecer baseline de migraciones |
 | `aaec5df` | Cerrar P0-6 (CORS) y P0-7 (sincronizar roles con Prisma) |
+| `9da37c5` | Cerrar P0-3 con validación de MIME y extensiones en upload |
 
 ### Ramas
 
