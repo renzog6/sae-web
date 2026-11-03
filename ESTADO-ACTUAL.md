@@ -1,6 +1,6 @@
 # Estado actual del proyecto SAE
 
-**Última actualización:** 28 de octubre de 2026
+**Última actualización:** 3 de noviembre de 2026
 
 Este documento es la referencia vigente. Los documentos de análisis y planificación
 (`ANALISIS-TECNICO-SAE.md`, `PLAN-ACTUALIZACION-NEXT-NEST.md`, `DECISION-GRAPHQL.md`)
@@ -115,7 +115,7 @@ controller, con la misma mecánica del paso anterior.
 
 ### Bloqueantes de seguridad (sin resolver)
 
-P0-1, P0-2, P0-4 y P0-8 están cerrados. Quedan abiertos P0-3, P0-5, P0-6 y P0-7.
+P0-1, P0-2, P0-4, P0-6, P0-7 y P0-8 están cerrados. Quedan abiertos P0-3 y P0-5.
 
 | ID | Problema | Verificación |
 |---|---|---|
@@ -124,15 +124,15 @@ P0-1, P0-2, P0-4 y P0-8 están cerrados. Quedan abiertos P0-3, P0-5, P0-6 y P0-7
 | P0-3 | Subida de archivos sin validar tipo MIME | Solo límite de 10 MB |
 | ~~P0-4~~ | ~~Sin `prisma/migrations/`~~ | **RESUELTO** (`a0a4e70`): baseline 0_init verificado sobre base vacía; el entrypoint aplica `migrate deploy` |
 | P0-5 | Secretos reales en `.env` y repositorios sin remoto | Sin backup fuera del equipo |
-| P0-6 | CORS abierto (`enableCors()` sin orígenes) | — |
-| P0-7 | `@Roles(Role.MANAGER)` referencia roles que no existen en Prisma | Restringe de más, en silencio |
+| ~~P0-6~~ | ~~CORS abierto (`enableCors()` sin orígenes)~~ | **RESUELTO** (`aaec5df`): whitelist vía `CORS_ORIGINS` en `main.ts` |
+| ~~P0-7~~ | ~~`@Roles(Role.MANAGER)` referencia roles que no existen en Prisma~~ | **RESUELTO** (`aaec5df`): enum unificado con Prisma + limpieza en controllers |
 | ~~P0-8~~ | ~~Escalada de privilegios por mass assignment en el CRUD genérico~~ | **RESUELTO** (`574ddb0` en `/users`, `2a52d83` en los 30 endpoints restantes) |
 
 ### Deuda técnica
 
 | Ítem | Detalle |
 |---|---|
-| 9 errores de lint (frontend) | `@ts-nocheck` en `equipment-form.tsx`, `equipment-model-form.tsx`, `tire-model-form.tsx` |
+| ~~9 errores de lint (frontend)~~ | **RESUELTO** (`3bf68e8`): `@ts-nocheck` eliminados en los forms de equipos y neumáticos |
 | 64 e2e fallando | Rutas mal escritas en la suite (`/companies/subcategories` vs `/business-subcategories`) |
 | 0 tests unitarios | 16 carpetas `tests/` vacías en el backend |
 | Sin CI | Nada valida `tsc`, build ni migraciones en cada PR |
@@ -153,6 +153,9 @@ P0-1, P0-2, P0-4 y P0-8 están cerrados. Quedan abiertos P0-3, P0-5, P0-6 y P0-7
 | `56d1b74` | Eliminación de la capa GraphQL |
 | `5bafeec` | Next.js 16.4.3 + React 19.3.1 |
 | `5e8151c` | Node 24 LTS |
+| `5cb0257` | Docs: actualizar la documentación al stack vigente |
+| `3bf68e8` | Fix(forms): eliminar los @ts-nocheck restaurando el Combobox con API de opciones |
+| `d7ea134` | Feat(api): tipos generados desde el contrato OpenAPI |
 
 ### `sae-backend`
 
@@ -164,6 +167,13 @@ P0-1, P0-2, P0-4 y P0-8 están cerrados. Quedan abiertos P0-3, P0-5, P0-6 y P0-7
 | `2890b73` | NestJS 11 (Express 5) |
 | `690f927` | Node 24 LTS |
 | `0db4f73` | NestJS 12 + TypeScript 6 + Jest 30 |
+| `2307e56` | Docs: actualizar README a NestJS 12 y eliminar reporte obsoleto |
+| `3d142b6` | Autenticación global en todos los endpoints (fail-closed) |
+| `574ddb0` | Cerrar escalada de privilegios en el CRUD de usuarios |
+| `2a52d83` | Tipar create/update del CRUD genérico en 20 controllers |
+| `78108b1` | Exportar contrato OpenAPI y completar los schemas |
+| `a0a4e70` | Cerrar IDOR en archivos y establecer baseline de migraciones |
+| `aaec5df` | Cerrar P0-6 (CORS) y P0-7 (sincronizar roles con Prisma) |
 
 ### Ramas
 
