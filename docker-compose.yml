@@ -91,6 +91,7 @@ services:
       - PORT=3005
       - HOST=0.0.0.0
       - API_PREFIX=api
+      - CORS_ORIGINS=${CORS_ORIGINS:-${NEXTAUTH_URL}}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION}      
       - TZ=${TZ}
