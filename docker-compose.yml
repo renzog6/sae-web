@@ -83,6 +83,8 @@ services:
     depends_on:
       sae-mysql:
         condition: service_healthy
+    group_add:
+      - "${BACKEND_STORAGE_GID:-1000}"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@sae-mysql:3306/${MYSQL_DATABASE}
