@@ -15,6 +15,13 @@ y desde el contenedor mediante `API_URL=http://sae-backend:3005/api`. El backend
 espera MySQL en la red privada de Compose y aplica las migraciones versionadas con
 `prisma migrate deploy` al arrancar.
 
+Para acceder desde otra máquina o en producción, `NEXT_PUBLIC_API_URL` debe usar
+una dirección del backend alcanzable desde el navegador (nunca `localhost` salvo
+que el navegador esté en el mismo servidor). Configurá también `CORS_ORIGINS` en
+el backend con el origen exacto del frontend, incluyendo esquema y puerto, por
+ejemplo `http://192.168.88.91:3003`. En producción usá las URLs públicas reales
+con HTTPS y reconstruí el frontend después de cambiar `NEXT_PUBLIC_API_URL`.
+
 ## Arranque local con Docker
 
 1. Copiá `.env.example` a `.env` y completá las dos contraseñas y los dos secretos

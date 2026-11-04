@@ -11,7 +11,6 @@ node_modules/
 /dist
 /sae-data/backup-data
 /sae-data/mysql-data
-/sae-data/mysql/mysql-data
 /sae-data/backend-data
 /sae-backend
 /sae-frontend
@@ -19,12 +18,12 @@ node_modules/
 
 # Archivos de entorno (contienen secretos)
 .env
-.env.*
-!.env.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*
+!.env.example
 
 # Logs
 logs
