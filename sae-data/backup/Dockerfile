@@ -31,5 +31,5 @@ RUN chmod +x /backup.sh && \
     mkdir -p /etc/periodic/daily && \
     ln -s /backup.sh /etc/periodic/daily/backup
 
-# Configurar cron y ejecutar una sola instancia
-CMD ["sh", "-c", "echo \"${BACKUP_SCHEDULE} /backup.sh\" > /etc/crontabs/root && exec crond -f -d 8"]
+# Configurar cron y ejecutar
+CMD ["sh", "-c", "crond -f -d 8 & echo \"${BACKUP_SCHEDULE} /backup.sh\" > /etc/crontabs/root && crond -f"]

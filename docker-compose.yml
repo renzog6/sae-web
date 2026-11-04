@@ -1,125 +1,159 @@
+# Docker Compose para la aplicación SAE-Web
+# Servicios de la aplicación SAE-Web
 services:
+
+  # Servicio de base de datos MySQL
   sae-mysql:
-    image: mysql:8.4
-    restart: unless-stopped
+    container_name: sae-mysql
+    build:
+      context: ./sae-data/mysql
+      args:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    restart: always
+    # No es necesario el comando personalizado ya que los permisos se establecen en el Dockerfile
+    # y el entrypoint predeterminado de la imagen MySQL ya ejecuta los scripts .sh
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
-      MYSQL_USER: ${MYSQL_USER:?Set MYSQL_USER in .env}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
-      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=${TZ}
     volumes:
-      - mysql-data:/var/lib/mysql
+      - ./sae-data/mysql/init:/docker-entrypoint-initdb.d
+      - ./sae-data/mysql-data:/var/lib/mysql
     ports:
       - "3307:3306"
     networks:
       - sae-network
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'mysqladmin ping -h 127.0.0.1 -uroot -p"$${MYSQL_ROOT_PASSWORD}" --silent',
-        ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
 
+  # Servicio de backup automático
   sae-backup:
+    container_name: sae-backup
     build: ./sae-data/backup
-    restart: unless-stopped
+    restart: always
     depends_on:
       sae-mysql:
         condition: service_healthy
     environment:
-      DB_HOST: sae-mysql
-      DB_USER: root
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
-      DB_NAME: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
-      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
-      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 0 * * *}
-      MAIL_SENDER: ${MAIL_SENDER:-}
-      MAIL_RECEIVER: ${MAIL_RECEIVER:-}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
-      MAIL_SERVER: ${MAIL_SERVER:-}
-      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+      - DB_HOST=sae-mysql
+      - DB_USER=root
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_NAME=${MYSQL_DATABASE}
+      - BACKUP_RETENTION_DAYS=7
+      - MAIL_SENDER=${MAIL_SENDER}
+      - MAIL_RECEIVER=${MAIL_RECEIVER}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_SERVER=${MAIL_SERVER}
+      - BACKUP_SCHEDULE=0 0 * * *
+      - TZ=${TZ}
     volumes:
-      - backup-data:/var/backups
+      - ./sae-data/backup-data:/var/backups
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - sae-network
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
         max-size: "5m"
         max-file: "3"
 
+  # Servicio de backend API
   sae-backend:
+    container_name: sae-backend
     build:
       context: ./sae-backend
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: always
     depends_on:
       sae-mysql:
         condition: service_healthy
+    group_add:
+      - "${BACKEND_STORAGE_GID:-1000}"
     environment:
-      NODE_ENV: production
-      DATABASE_URL: mysql://${MYSQL_USER:?Set MYSQL_USER in .env}:${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}@sae-mysql:3306/${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
-      PORT: 3005
-      HOST: 0.0.0.0
-      API_PREFIX: api
-      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
-      JWT_EXPIRATION: ${JWT_EXPIRATION:-1d}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3303}
-      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+      - NODE_ENV=production
+      - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@sae-mysql:3306/${MYSQL_DATABASE}
+      - PORT=3005
+      - HOST=0.0.0.0
+      - API_PREFIX=api
+      - CORS_ORIGINS=${CORS_ORIGINS:-${NEXTAUTH_URL}}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}      
+      - TZ=${TZ}
     ports:
       - "3305:3005"
     volumes:
-      - backend-data:/app/storage
+      - ./sae-data/backend-data:/app/storage
     networks:
       - sae-network
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "3"    
 
+  # Servicio de frontend
   sae-frontend:
+    container_name: sae-frontend
     build:
       context: ./sae-frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?Set NEXT_PUBLIC_API_URL in .env}
-    restart: unless-stopped
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+    restart: always
     depends_on:
       sae-backend:
-        condition: service_healthy
+        condition: service_started
     environment:
-      NODE_ENV: production
-      API_URL: http://sae-backend:3005/api
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?Set NEXT_PUBLIC_API_URL in .env}
-      NEXTAUTH_URL: ${NEXTAUTH_URL:?Set NEXTAUTH_URL in .env}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?Set NEXTAUTH_SECRET in .env}
-      TZ: ${TZ:-America/Argentina/Buenos_Aires}
+      - NODE_ENV=production
+      - API_URL=${API_URL}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - TZ=${TZ}
     ports:
       - "3303:3003"
     networks:
       - sae-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://sae-frontend:3303 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
 
+# Definición de redes
 networks:
   sae-network:
     driver: bridge
+    name: sae-network
 
+# Definición de volúmenes persistentes
 volumes:
   mysql-data:
+    name: sae-mysql-data
   backup-data:
+    name: sae-backup-data
   backend-data:
+    name: sae-backend-data
