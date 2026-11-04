@@ -1,0 +1,7 @@
+[submodule "sae-backend"]
+    path = sae-backend
+    url = git@github.com:renzog6/sae-backend.git
+
+[submodule "sae-frontend"]
+    path = sae-frontend
+    url = git@github.com:renzog6/sae-frontend.git
