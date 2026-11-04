@@ -62,6 +62,8 @@ de desarrollo `3305`.
 - Guards globales y autenticación fail-closed.
 - Control de pertenencia para descargas de archivos.
 - Validación de MIME y extensiones en subidas.
+- Filtrado de documentos por empleado y empresa, con validación de parámetros repetidos o inválidos.
+- Descargas de documentos usando el nombre original almacenado.
 - Baseline de migraciones Prisma y ejecución con `prisma migrate deploy`.
 - CORS restringido mediante `CORS_ORIGINS`.
 - DTOs tipados en el CRUD genérico para evitar mass assignment.
@@ -69,6 +71,9 @@ de desarrollo `3305`.
 - `lint:check` del backend sin autofix.
 - Corrección de ejemplos Swagger no deterministas producidos por `new Date()`.
 - Corrección de la URL local del frontend y conexión con el backend en `/api`.
+- Vista canónica de vacaciones en `/employees/:id/vacations`; la ruta histórica redirige a esa vista.
+- Información del empleado, exportación del historial y días disponibles integrados en la vista de vacaciones.
+- Layout de legajo unificado, sin tarjetas contenedoras duplicadas y con títulos de formulario consistentes.
 
 ## Verificaciones realizadas
 
@@ -76,8 +81,8 @@ de desarrollo `3305`.
 
 - `npx tsc --noEmit -p tsconfig.json`: correcto.
 - `npm run lint:check`: correcto.
-- `npm run build`: correcto.
-- `npm run test:e2e`: 19 pruebas aprobadas en 3 suites.
+- Los cambios recientes de filtros pasaron nuevamente typecheck y lint.
+- En la última ejecución local, E2E no pudo abrir puertos por `EACCES` del entorno Windows.
 - `/api/health`: responde `200` con MySQL local.
 - `/api/docs`: responde `200`.
 
@@ -85,7 +90,8 @@ de desarrollo `3305`.
 
 - `npm run typecheck`: correcto.
 - `npm run lint`: correcto, con advertencias no bloqueantes existentes.
-- `npm run build`: correcto, 60 rutas generadas.
+- La revisión reciente terminó con 0 errores de ESLint y advertencias existentes no bloqueantes.
+- El build local posterior no pudo limpiar archivos de `dist` por `EPERM`; debe confirmarse en CI o en un entorno sin bloqueos de archivos.
 - Listados probados contra el backend local con datos reales.
 
 ### CI
@@ -143,18 +149,14 @@ en GitHub Actions después de todos los cambios recientes.
 
 ### Repositorio raíz
 
-- `78e2b71` - sincronización del contrato API generado.
-- `a2750fc` - workflow CI para backend, frontend y contrato API.
+- `8b0a107` - actualización de los subrepositorios backend y frontend.
 
 ### Backend
 
-- `984e449` - estabilización del contrato OpenAPI generado.
-- `d7e1bda` - lint check sin autofix.
+- `d02174a` - validación de filtros de archivos del servidor.
+- `01ea089` - protección de registros históricos contra borrado.
 
 ### Frontend
 
-- `67e2115` - actualización de tipos API generados.
-
-Los últimos cambios locales de documentación, visualización horaria y proveedores
-frontend deben validarse y publicarse en commits separados cuando finalice esta
-revisión.
+- `7517070` - unificación de vistas de vacaciones y documentos del empleado.
+- `36521b1` - alineación de la interfaz con la política de borrado histórico.
