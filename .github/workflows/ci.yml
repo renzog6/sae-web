@@ -1,0 +1,260 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 24.x
+
+jobs:
+  backend-quality:
+    name: Backend quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: sae-backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: sae-backend
+        run: npm ci
+
+      - name: Generate Prisma Client
+        working-directory: sae-backend
+        run: npm run prisma:generate
+
+      - name: Typecheck backend
+        working-directory: sae-backend
+        run: npx tsc --noEmit -p tsconfig.json
+
+      - name: Lint backend
+        working-directory: sae-backend
+        run: npm run lint:check
+
+      - name: Build backend
+        working-directory: sae-backend
+        run: npm run build
+
+  frontend-quality:
+    name: Frontend quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: sae-frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: sae-frontend
+        run: npm ci
+
+      - name: Typecheck frontend
+        working-directory: sae-frontend
+        run: npm run typecheck
+
+      - name: Lint frontend
+        working-directory: sae-frontend
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: sae-frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3005/api
+          NEXTAUTH_URL: http://localhost:3003
+          NEXTAUTH_SECRET: ci-only-nextauth-secret
+        run: npm run build
+
+  migrations-and-e2e:
+    name: Migrations and e2e
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root-password
+          MYSQL_DATABASE: sae_web_test
+          MYSQL_USER: sae_test
+          MYSQL_PASSWORD: sae_test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -proot-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: sae-backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: sae-backend
+        run: npm ci
+
+      - name: Configure test environment
+        working-directory: sae-backend
+        env:
+          DATABASE_URL: mysql://sae_test:sae_test_password@127.0.0.1:3306/sae_web_test
+          JWT_SECRET: ci-only-jwt-secret
+          NODE_ENV: test
+          API_PREFIX: api
+          PORT: 3005
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+          echo "JWT_SECRET=$JWT_SECRET" >> .env
+          echo "NODE_ENV=$NODE_ENV" >> .env
+          echo "API_PREFIX=$API_PREFIX" >> .env
+          echo "PORT=$PORT" >> .env
+
+      - name: Generate Prisma Client
+        working-directory: sae-backend
+        run: npm run prisma:generate
+
+      - name: Apply migrations
+        working-directory: sae-backend
+        run: npm run prisma:migrate:deploy
+
+      - name: Check migration status
+        working-directory: sae-backend
+        run: npm run prisma:migrate:status
+
+      - name: Run e2e tests
+        working-directory: sae-backend
+        run: npm run test:e2e
+
+  api-contract:
+    name: API contract
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root-password
+          MYSQL_DATABASE: sae_web_contract
+          MYSQL_USER: sae_contract
+          MYSQL_PASSWORD: sae_contract_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -proot-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            sae-backend/package-lock.json
+            sae-frontend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: sae-backend
+        run: npm ci
+
+      - name: Install frontend dependencies
+        working-directory: sae-frontend
+        run: npm ci
+
+      - name: Generate Prisma Client
+        working-directory: sae-backend
+        run: npm run prisma:generate
+
+      - name: Configure contract environment
+        working-directory: sae-backend
+        env:
+          DATABASE_URL: mysql://sae_contract:sae_contract_password@127.0.0.1:3306/sae_web_contract
+          JWT_SECRET: ci-only-jwt-secret
+          NODE_ENV: test
+          API_PREFIX: api
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+          echo "JWT_SECRET=$JWT_SECRET" >> .env
+          echo "NODE_ENV=$NODE_ENV" >> .env
+          echo "API_PREFIX=$API_PREFIX" >> .env
+
+      - name: Apply migrations
+        working-directory: sae-backend
+        run: npm run prisma:migrate:deploy
+
+      - name: Export OpenAPI contract
+        working-directory: sae-backend
+        env:
+          JWT_SECRET: ci-only-jwt-secret
+          NODE_ENV: test
+        run: npm run openapi:export
+
+      - name: Regenerate frontend API types
+        working-directory: sae-frontend
+        run: npm run openapi:types
+
+      - name: Verify generated contract is committed
+        run: |
+          git -C sae-backend diff --exit-code -- openapi.json
+          git -C sae-frontend diff --exit-code -- lib/api/schema.d.ts
