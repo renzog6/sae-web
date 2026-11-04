@@ -1,12 +1,10 @@
 # Estado actual del proyecto SAE
 
-**Última actualización:** 3 de noviembre de 2026 (post-merge a main)
+**Última actualización:** 4 de noviembre de 2026
 
-Este documento es la referencia vigente. Los documentos de análisis y planificación
-(`ANALISIS-TECNICO-SAE.md`, `PLAN-ACTUALIZACION-NEXT-NEST.md`, `DECISION-GRAPHQL.md`)
-describen el diagnóstico y el plan original; **el plan ya fue ejecutado**.
-
----
+Este documento es la referencia operativa del repositorio `sae-web`. Los análisis y
+planes anteriores se conservan como documentación histórica y no representan tareas
+pendientes salvo que se indique explícitamente.
 
 ## Stack actual
 
@@ -14,181 +12,149 @@ describen el diagnóstico y el plan original; **el plan ya fue ejecutado**.
 
 | Componente | Versión |
 |---|---|
-| NestJS | **12.3.2** |
-| TypeScript | **6.0.3** |
-| Node.js | **24 LTS** (Docker `node:24-alpine`) |
-| Prisma | 6.19.1 (MySQL) |
+| NestJS | 12.3.2 |
+| TypeScript | 6.0.3 |
+| Node.js | 24 LTS |
+| Prisma | 6.19.1 con MySQL |
 | Express | 5.3.0 |
 | Jest | 30.5.2 |
-| API | **REST únicamente** (GraphQL eliminado) |
+| API | REST únicamente |
 
 ### Frontend (`sae-frontend`)
 
 | Componente | Versión |
 |---|---|
-| Next.js | **16.4.3** (App Router, Turbopack) |
-| React | **19.3.1** |
+| Next.js | 16.4.3, App Router y Turbopack |
+| React | 19.3.1 |
 | TypeScript | 5.x |
 | Tailwind CSS | 4.x |
 | TanStack Query | 5.x |
 | NextAuth | 4.24 |
-| Node.js | **24 LTS** |
+| Node.js | 24 LTS |
 
-### Puertos
+### Puertos y URLs locales
 
-- Frontend: **3003**
-- Backend: **3305** (`API_PREFIX=api` → `/api/...`)
+- Frontend: `http://localhost:3003`
+- Backend desarrollo: `http://localhost:3305`
+- API pública del frontend: `http://localhost:3305/api`
+- Health check: `http://localhost:3305/api/health`
+- Swagger: `http://localhost:3305/api/docs`
+- MySQL local: `localhost:3306`, base `sae_web`
 
----
+En Docker/producción el backend usa `3005`; no debe confundirse con el puerto local
+de desarrollo `3305`.
 
-## Trabajo realizado
+## Arquitectura y decisiones vigentes
 
-### 1. Eliminación de GraphQL
+- El transporte utilizado es REST; GraphQL fue eliminado del frontend y backend.
+- El contrato OpenAPI se versiona en `sae-backend/openapi.json`.
+- Los tipos del frontend se generan en `sae-frontend/lib/api/schema.d.ts`.
+- Los subrepositorios `sae-backend` y `sae-frontend` se mantienen como gitlinks del
+  repositorio raíz.
+- El frontend usa `NEXT_PUBLIC_API_URL=http://localhost:3305/api` en desarrollo.
+- Las fechas se almacenan como instantes UTC y se convierten a la zona local en la
+  interfaz cuando corresponde, por ejemplo `America/Argentina/Buenos_Aires`.
 
-El sistema tenía dos transportes en paralelo. El frontend usaba GraphQL en 2 archivos
-(de 341) y el backend mantenía 35 resolvers. Se consolidó todo en REST.
+## Trabajo completado
 
-- Frontend: −31.900 líneas (`lib/graphql/`, codegen, 7 dependencias)
-- Backend: −12.300 líneas (35 resolvers, 688 decoradores en 112 archivos, `schema.gql`,
-  `common/types/graphql.ts`, 4 dependencias)
-- El backend quedó sin ninguna referencia a GraphQL (`npm ls` del grafo devuelve *empty*)
+- Migración a Next.js 16, React 19, NestJS 12, TypeScript 6 y Node 24.
+- Eliminación completa de GraphQL.
+- Guards globales y autenticación fail-closed.
+- Control de pertenencia para descargas de archivos.
+- Validación de MIME y extensiones en subidas.
+- Baseline de migraciones Prisma y ejecución con `prisma migrate deploy`.
+- CORS restringido mediante `CORS_ORIGINS`.
+- DTOs tipados en el CRUD genérico para evitar mass assignment.
+- Contrato OpenAPI regenerable y tipos frontend sincronizados.
+- `lint:check` del backend sin autofix.
+- Corrección de ejemplos Swagger no deterministas producidos por `new Date()`.
+- Corrección de la URL local del frontend y conexión con el backend en `/api`.
 
-### 2. Actualización de frameworks
+## Verificaciones realizadas
 
-| Fase | Resultado |
-|---|---|
-| Node 24 LTS | Dockerfiles + `.nvmrc` en ambos proyectos |
-| Next.js 15.5.3 → 16.4.3 | `middleware.ts` → `proxy.ts`, Turbopack por defecto, `next lint` → ESLint CLI |
-| NestJS 10 → 11 | Express 5: `forRoutes("*")` → `forRoutes("{*splat}")` |
-| NestJS 11 → 12 | TypeScript 6, Jest 30, `baseUrl` eliminado, scripts con `--experimental-vm-modules` |
+### Backend
 
-### 3. Correcciones que aparecieron en el camino
+- `npx tsc --noEmit -p tsconfig.json`: correcto.
+- `npm run lint:check`: correcto.
+- `npm run build`: correcto.
+- `npm run test:e2e`: 19 pruebas aprobadas en 3 suites.
+- `/api/health`: responde `200` con MySQL local.
+- `/api/docs`: responde `200`.
 
-- `moduleNameMapper` de Jest incompleto: los 12 e2e no ejecutaban **ningún** test
-- Crash en `companies/list`: `categories` recibía `{data, meta}` y llamaba `.sort()`
-- Imports `src/prisma/...` (solo resolvían por `baseUrl`) → `@prisma/...`
-- 4 errores de lint nuevos por `<a>` internos → `next/link`
-- Filtro `status` de equipos que nunca se enviaba al backend (documentado en el código)
+### Frontend
 
----
+- `npm run typecheck`: correcto.
+- `npm run lint`: correcto, con advertencias no bloqueantes existentes.
+- `npm run build`: correcto, 60 rutas generadas.
+- Listados probados contra el backend local con datos reales.
 
-## Verificación al día de hoy
+### CI
 
-```
-backend   tsc --noEmit  -> 0 errores
-          nest build    -> OK
-          test:e2e      -> 19 pasan / 0 fallan (3 suites: auth, seguridad archivos, smoke test de negocio) en ~15s
-          runtime       -> /api/health 200, /api/docs 200, /api/companies 401
+El workflow [.github/workflows/ci.yml](.github/workflows/ci.yml) ejecuta:
 
-frontend  tsc --noEmit  -> 0 errores
-          next build    -> OK, 60 rutas
-          eslint        -> 471 warnings / 0 errores
-          runtime       -> /login 200, /dashboard 307
-```
+- Calidad del backend: Prisma, typecheck, lint sin autofix y build.
+- Calidad del frontend: typecheck, lint y build.
+- Migraciones y pruebas E2E con MySQL 8.4.
+- Exportación OpenAPI y verificación de artefactos generados.
 
-### 4. Contrato de API (OpenAPI)
+El primer fallo del contrato OpenAPI fue corregido estabilizando los ejemplos de
+fecha y sincronizando los artefactos. Falta confirmar el resultado del siguiente run
+en GitHub Actions después de todos los cambios recientes.
 
-El CRUD genérico recibía `@Body() dto: any`, y con metatipo `Object` el
-`ValidationPipe` **no valida**. Dos consecuencias: los endpoints aceptaban
-cualquier body (mass assignment) y Swagger no podía documentarlos.
+## Pendientes actuales
 
-- `create`/`update` tipados con su DTO en 20 controllers (30 endpoints) — `2a52d83`
-- `PartialType` movido a `@nestjs/swagger` en 22 DTOs: el de `@nestjs/mapped-types`
-  no propaga `@ApiProperty`, así que esos schemas salían **vacíos** — `78108b1`
-- `openapi.json` versionado, exportado desde la app compilada (sin abrir puerto)
+### Prioridad alta
 
-```bash
-npm run openapi:export     # backend: regenera openapi.json
-npm run openapi:types      # frontend: regenera lib/api/schema.d.ts
-```
+1. Rotar secretos de desarrollo que hayan sido compartidos y mantener secretos reales
+   fuera de archivos versionados o capturas.
+2. Ejecutar y confirmar el CI posterior a la corrección del contrato OpenAPI.
+3. Actualizar el remoto del frontend de `sae-fronted` a `sae-frontend`.
 
-Contrato: **168 paths, 80 schemas, 0 vacíos** (antes había 22 vacíos).
+### Prioridad media
 
-**Límite conocido:** documenta los cuerpos de **entrada** (Create/Update) pero no
-los de **respuesta**, porque `BaseController.findAll/findOne` no declaran
-`@ApiOkResponse` con un tipo concreto. Tipar respuestas requiere ese decorador por
-controller, con la misma mecánica del paso anterior.
+1. Agregar tests unitarios reales en backend; actualmente la cobertura depende sobre
+   todo de E2E.
+2. Evaluar activar `strictNullChecks` en backend.
+3. Completar schemas de respuesta en OpenAPI; hoy el contrato documenta principalmente
+   cuerpos de entrada.
+4. Revisar Dockerfiles para no incluir dependencias de desarrollo en runtime y no
+   pasar secretos como argumentos de build.
+5. Resolver la advertencia de DTO duplicado `CreateTirePositionDto` en Swagger.
+6. Revisar la vulnerabilidad crítica reportada por `npm audit` y confirmar su estado
+   actual con una nueva auditoría.
 
----
+### Prioridad baja
 
-## Pendiente, por prioridad
+1. Reducir advertencias de ESLint del frontend.
+2. Unificar y simplificar la documentación duplicada de los subrepositorios.
+3. Decidir si se elimina la dependencia `next-themes`, actualmente sin uso después
+   de retirar el proveedor que generaba un error de React en desarrollo.
 
-### Bloqueantes de seguridad (sin resolver)
+## Documentación relacionada
 
-P0-1, P0-2, P0-3, P0-4, P0-6, P0-7 y P0-8 están cerrados. El único ítem abierto es P0-5.
+- `ANALISIS-TECNICO-SAE.md`: diagnóstico histórico previo a la migración.
+- `PLAN-ACTUALIZACION-NEXT-NEST.md`: plan de actualización ya ejecutado.
+- `DECISION-GRAPHQL.md`: decisión implementada de consolidar en REST.
+- `sae-backend/README.md`: instalación y operación del backend.
+- `sae-frontend/README.md`: instalación y operación del frontend.
+- `sae-frontend/docs/`: integración API, arquitectura, despliegue y troubleshooting.
 
-| ID | Problema | Verificación |
-|---|---|---|
-| ~~P0-1~~ | ~~44 endpoints REST sin autenticación~~ | **RESUELTO** (`3d142b6`): guards globales + `@Public()` |
-| ~~P0-2~~ | ~~IDOR en `/api/server-files/:id/download`~~ | **RESUELTO** (`a0a4e70`): control de pertenencia por empresa + 4 tests |
-| ~~P0-3~~ | ~~Subida de archivos sin validar tipo MIME~~ | **RESUELTO** (`9da37c5`): whitelist MIME/extensiones en Multer + cleanup temporales + 2 tests |
-| ~~P0-4~~ | ~~Sin `prisma/migrations/`~~ | **RESUELTO** (`a0a4e70`): baseline 0_init verificado sobre base vacía; el entrypoint aplica `migrate deploy` |
-| P0-5 | Secretos reales en `.env` y repositorios sin remoto | Sin backup fuera del equipo |
-| ~~P0-6~~ | ~~CORS abierto (`enableCors()` sin orígenes)~~ | **RESUELTO** (`aaec5df`): whitelist vía `CORS_ORIGINS` en `main.ts` |
-| ~~P0-7~~ | ~~`@Roles(Role.MANAGER)` referencia roles que no existen en Prisma~~ | **RESUELTO** (`aaec5df`): enum unificado con Prisma + limpieza en controllers |
-| ~~P0-8~~ | ~~Escalada de privilegios por mass assignment en el CRUD genérico~~ | **RESUELTO** (`574ddb0` en `/users`, `2a52d83` en los 30 endpoints restantes) |
+## Commits recientes
 
-### Deuda técnica
+### Repositorio raíz
 
-| Ítem | Detalle |
-|---|---|
-| ~~9 errores de lint (frontend)~~ | **RESUELTO** (`3bf68e8`): `@ts-nocheck` eliminados en los forms de equipos y neumáticos |
-| ~~64 e2e fallando~~ | **RESUELTO** (`57647c1`): Suite consolidada (Plan A: poda de 12 specs obsoletos + Smoke Test de flujos clave) |
-| 0 tests unitarios | 16 carpetas `tests/` vacías en el backend |
-| Sin CI | Nada valida `tsc`, build ni migraciones en cada PR |
-| `strictNullChecks: false` | En el backend |
-| 1 vulnerabilidad crítica | En dependencias de producción del frontend |
+- `78e2b71` - sincronización del contrato API generado.
+- `a2750fc` - workflow CI para backend, frontend y contrato API.
 
----
+### Backend
 
-## Commits de la actualización
+- `984e449` - estabilización del contrato OpenAPI generado.
+- `d7e1bda` - lint check sin autofix.
 
-### `sae-frontend`
+### Frontend
 
-| Hash | Descripción |
-|---|---|
-| `497f98d` | shadcn/ui + dependencias de diseño |
-| `7781353` | Refactor de la capa de aplicación de empleados |
-| `8077041` | Hooks `useCompanies`/`useEquipments` a REST |
-| `56d1b74` | Eliminación de la capa GraphQL |
-| `5bafeec` | Next.js 16.4.3 + React 19.3.1 |
-| `5e8151c` | Node 24 LTS |
-| `5cb0257` | Docs: actualizar la documentación al stack vigente |
-| `3bf68e8` | Fix(forms): eliminar los @ts-nocheck restaurando el Combobox con API de opciones |
-| `d7ea134` | Feat(api): tipos generados desde el contrato OpenAPI |
-| `7fb710d` | Feat(api): regenerar schema.d.ts tras actualización de openapi |
-| `2f2a6b8` | **merge: consolidar Next.js 16, React 19 y tipos OpenAPI en main** |
+- `67e2115` - actualización de tipos API generados.
 
-### `sae-backend`
-
-| Hash | Descripción |
-|---|---|
-| `0314840` | `moduleNameMapper` de Jest |
-| `58f699c` | Eliminación de resolvers y módulo GraphQL |
-| `75b974e` | Eliminación de decoradores GraphQL en DTOs |
-| `2890b73` | NestJS 11 (Express 5) |
-| `690f927` | Node 24 LTS |
-| `0db4f73` | NestJS 12 + TypeScript 6 + Jest 30 |
-| `2307e56` | Docs: actualizar README a NestJS 12 y eliminar reporte obsoleto |
-| `3d142b6` | Autenticación global en todos los endpoints (fail-closed) |
-| `574ddb0` | Cerrar escalada de privilegios en el CRUD de usuarios |
-| `2a52d83` | Tipar create/update del CRUD genérico en 20 controllers |
-| `78108b1` | Exportar contrato OpenAPI y completar los schemas |
-| `a0a4e70` | Cerrar IDOR en archivos y establecer baseline de migraciones |
-| `aaec5df` | Cerrar P0-6 (CORS) y P0-7 (sincronizar roles con Prisma) |
-| `9da37c5` | Cerrar P0-3 con validación de MIME y extensiones en upload |
-| `57647c1` | Consolidar suite e2e en smoke test y seguridad (Plan A) |
-| `94ca6ee` | **merge: consolidar NestJS 12, REST y hardening de seguridad en main** |
-
-### Ramas
-
-Ambas ramas de trabajo fueron mergeadas a `main` con `--no-ff` y eliminadas:
-
-| Repo | Rama | Merge commit | Tag de seguridad |
-|---|---|---|---|
-| `sae-backend` | `chore/nest-11` | `94ca6ee` | `pre-merge-checkpoint` |
-| `sae-frontend` | `chore/next-16` | `2f2a6b8` | `pre-merge-checkpoint` |
-
-El root repo (`sae-web-ia`) fue actualizado con los nuevos punteros de submódulos en el commit `bd3b885`.
-
-Existe también el tag `pre-graphql-removal` en ambos repos como punto de retorno anterior.
+Los últimos cambios locales de documentación, visualización horaria y proveedores
+frontend deben validarse y publicarse en commits separados cuando finalice esta
+revisión.

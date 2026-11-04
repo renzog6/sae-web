@@ -1,4 +1,7 @@
-# Plan de actualización: Next.js y NestJS a versiones estables / LTS
+# Plan de actualización: Next.js y NestJS a versiones estables / LTS (completado)
+
+> Estado: completado. El repositorio está actualmente en Next.js 16.4.3 y NestJS 12.3.2.
+> Este documento se conserva como registro del plan ejecutado.
 
 > **Estado:** plan ejecutado. El estado vigente esta en [ESTADO-ACTUAL.md](ESTADO-ACTUAL.md).
 

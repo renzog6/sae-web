@@ -1,4 +1,7 @@
-# Decisión: qué hacer con GraphQL en SAE
+# Decisión: qué hacer con GraphQL en SAE (implementada)
+
+> Estado: completada. SAE utiliza REST; GraphQL fue eliminado del frontend y backend.
+> Este documento conserva el razonamiento histórico de la decisión.
 
 > **Estado:** plan ejecutado. El estado vigente esta en [ESTADO-ACTUAL.md](ESTADO-ACTUAL.md).
 

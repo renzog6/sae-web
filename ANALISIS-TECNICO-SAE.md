@@ -1,4 +1,7 @@
-# Análisis técnico del proyecto SAE
+# Análisis técnico del proyecto SAE (histórico)
+
+> Snapshot realizado antes de la migración a Next.js 16, NestJS 12, REST y CI.
+> Para el estado vigente consultar `ESTADO-ACTUAL.md`.
 
 > **Estado:** plan ejecutado. El estado vigente esta en [ESTADO-ACTUAL.md](ESTADO-ACTUAL.md).
 
